@@ -30,10 +30,15 @@
         getContext<PositionContext>('window-position') : 
             setContext<PositionContext>('window-position', writable({ x: 0, y: 0 }));
     
-    windowPositionContext.subscribe(v => (windowPosition = v));
+    windowPositionContext.subscribe(v => {
+        if (v.y >= 0) {
+            windowPosition = v;
+        }
+    });
 
     onMount(() => {
         document.body.style.height = '100vh';
+        document.body.style.overflow = 'hidden';
 
         return () => {
             zoneElement.element?.removeEventListener('mousedown', handleMouseDown);
@@ -73,8 +78,12 @@
 
     const handleMouseMove = (e: MouseEvent) => {
         inMove && (() => {
-            windowPosition.x += e.clientX - oldMousePosition.x;
-            windowPosition.y += e.clientY - oldMousePosition.y;
+            if (windowPosition.x + (e.clientX - oldMousePosition.x) >= 0) {
+                windowPosition.x += e.clientX - oldMousePosition.x;
+            }
+            if (windowPosition.y + (e.clientY - oldMousePosition.y) >= 0) {
+                windowPosition.y += e.clientY - oldMousePosition.y;
+            }
 
             oldMousePosition = {
                 x: e.clientX,

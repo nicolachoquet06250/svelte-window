@@ -2,9 +2,11 @@
   <Resizable>
     <Movable>
       <Window --border-color='black'
+
               --header-bg-color='lightgray'
               --header-border-color='black'
               --header-border-size='1px'
+              
               --title-color='black'
               bind:windowWidth={windowWidth}
               bind:windowHeight={windowHeight}

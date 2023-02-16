@@ -35,15 +35,21 @@
         oldMousePosition = { x: e.x, y: e.y };
 
         clicked = true;
-        dispatch('clicked', side);
+        dispatch('clicked', {side, e});
     };
 
     $: handleMouseMove = (e: MouseEvent) => {
         moveTo !== null && (() => {
             (['top', 'bottom'].includes(side, 0)) && clicked && 
-                dispatch('resize', { height: e.y, side });
+                dispatch('resize', {
+                    size: { height: e.y }, 
+                    side, e
+                });
             (['left', 'right'].includes(side, 0)) && clicked && 
-                dispatch('resize', { width: e.x, side });
+                dispatch('resize', {
+                    size: { width: e.x }, 
+                    side, e
+                });
         })();
     };
 
@@ -61,8 +67,18 @@
 
 <script lang='ts' context='module'>
     export type AvailableSide = 'left' | 'right' | 'top' | 'bottom';
-    export type ClickedEvent = CustomEvent<AvailableSide>;
-    export type ResizeEvent = CustomEvent<{ width?: number, height?: number, side: AvailableSide }>;
+    export type ClickedEvent = CustomEvent<{
+        side: AvailableSide,
+        e: MouseEvent
+    }>;
+    export type ResizeEvent = CustomEvent<{
+        size: {
+            width?: number,
+            height?: number
+        }, 
+        side: AvailableSide,
+        e: MouseEvent
+    }>;
 </script>
 
 <style scoped>

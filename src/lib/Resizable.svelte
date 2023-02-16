@@ -1,7 +1,10 @@
 <div class:resizable={true}
+
      style:min-width={minWidth + 'px'}
      style:min-height={minHeight + 'px'}
+
      style:width style:height
+
      style:--position-x={windowPosition.x + 'px'}
      style:--position-y={windowPosition.y + 'px'}>
     <slot />
@@ -29,7 +32,10 @@
     let size = { width: 0, height: 0 };
     let tmpSize = { width: 0, height: 0 };
     let windowPosition: Point = { x: 0, y: 0 };
+    let clickPosition: Point = { x: 0, y: 0 };
+    let clickedSize: Partial<BoxSize> = {};
 
+    // set des contextes
     setContext('resizable', writable(true));
     const minSizeContext = setContext('min-size', writable({
         width: 0,
@@ -43,12 +49,26 @@
         getContext<PositionContext>('window-position') : 
             setContext<PositionContext>('window-position', writable({ x: 0, y: 0 }));
 
+    // computed & subscribes
     $: width = (resizeTo !== null ? tmpSize.width : size.width) + 'px';
     $: height = (resizeTo !== null ? tmpSize.height : size.height) + 'px';
 
     $: unsubscribe = windowSizeContext.subscribe(v => {
         v.width && v.height && (() => {
-            size = {...size, width: v.width, height: v.height};
+            const newSize: Partial<BoxSize> = {};
+            v.width !== 0 && 
+                (newSize.width = v.width);
+            v.height !== 0 && 
+                (newSize.height = v.height);
+
+            v.width !== 0 && 
+                tmpSize.width === 0 && 
+                    (tmpSize.width = v.width);
+            v.height !== 0 && 
+                tmpSize.height === 0 && 
+                    (tmpSize.height = v.height);
+
+            size = { ...size, ...newSize };
             
             try {
                 unsubscribe();
@@ -63,39 +83,68 @@
 
     windowPositionContext.subscribe(v => (windowPosition = v));
 
-    $: handleClicked = (e: ClickedEvent) => (resizeTo = e.detail);
+    $: handleClicked = (e: ClickedEvent) => {
+        resizeTo = e.detail.side;
+        clickPosition = {
+            x: e.detail.e.pageX,
+            y: e.detail.e.pageY
+        };
+        clickedSize = {...size};
+    };
 
-    $: handleUnclicked = () => (resizeTo = null);
+    $: handleUnclicked = () => {
+        resizeTo = null;
+        clickPosition = { x: 0, y: 0 };
+        clickedSize = {};
+    };
 
     $: handleResize = (e: ResizeEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
-        e.detail.side === 'bottom' && (tmpSize = {
-            ...tmpSize, 
-            height: e.detail.height - windowPosition.y
-        });
-        e.detail.side === 'right' && (tmpSize = {
-            ...tmpSize, 
-            width: e.detail.width - windowPosition.x
-        });
+        e.detail.side === 'bottom' && (() => {
+            const height = e.detail.size.height - windowPosition.y < minHeight ? 
+                tmpSize.height : e.detail.size.height - windowPosition.y;
+
+            tmpSize = {...tmpSize, height};
+        })();
+        e.detail.side === 'right' && (() => {
+            const width = e.detail.size.width - windowPosition.x < minWidth ?
+                tmpSize.width : e.detail.size.width - windowPosition.x;
+            
+            tmpSize = {...tmpSize, width};
+        })();
         
         e.detail.side === 'top' && (() => {
-            windowPositionContext.set({
-                ...windowPosition,
-                y: windowPosition.y + (e.detail.height - windowPosition.y)
-            });
-            tmpSize = {
-                ...tmpSize,
-                height: e.detail.height - windowPosition.y
-            };
-            console.log(tmpSize, windowPosition)
+            const topDiff = (clickPosition.y - e.detail.e.pageY);
+
+            const height = clickedSize.height + topDiff < minHeight ? 
+                minHeight : clickedSize.height + topDiff;
+            
+            if (height > minHeight) {
+                windowPositionContext.set({
+                    ...windowPosition,
+                    y: windowPosition.y + (e.detail.size.height - windowPosition.y)
+                });
+            }
+            
+            tmpSize = {...tmpSize, height};
         })();
+
         e.detail.side === 'left' && (() => {
-            tmpSize = {
-                ...tmpSize, 
-                width: (e.detail.width - windowPosition.x)
-            };
+            const topDiff = (clickPosition.x - e.detail.e.pageX);
+
+            const width = clickedSize.width + topDiff < minWidth ? 
+                minWidth : clickedSize.width + topDiff;
+            
+            if (width > minWidth) {
+                windowPositionContext.set({
+                    ...windowPosition,
+                    x: windowPosition.x + (e.detail.size.width - windowPosition.x)
+                });
+            }
+            
+            tmpSize = {...tmpSize, width};
         })();
     };
 </script>
