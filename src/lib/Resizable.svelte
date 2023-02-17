@@ -53,7 +53,7 @@
     $: width = (resizeTo !== null ? tmpSize.width : size.width) + 'px';
     $: height = (resizeTo !== null ? tmpSize.height : size.height) + 'px';
 
-    $: unsubscribe = windowSizeContext.subscribe(v => {
+    $: unsubscribe = windowSizeContext?.subscribe(v => {
         v.width && v.height && (() => {
             const newSize: Partial<BoxSize> = {};
             v.width !== 0 && 
@@ -76,12 +76,12 @@
         })();
     });
 
-    minSizeContext.subscribe(v => {
+    minSizeContext?.subscribe(v => {
         minWidth = v.width;
         minHeight = v.height;
     });
 
-    windowPositionContext.subscribe(v => (windowPosition = v));
+    windowPositionContext?.subscribe(v => (windowPosition = v));
 
     $: handleClicked = (e: ClickedEvent) => {
         resizeTo = e.detail.side;
@@ -114,7 +114,7 @@
             
             tmpSize = {...tmpSize, width};
         })();
-        
+
         e.detail.side === 'top' && (() => {
             const topDiff = (clickPosition.y - e.detail.e.pageY);
 

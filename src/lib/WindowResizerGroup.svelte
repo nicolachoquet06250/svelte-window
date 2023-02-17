@@ -1,5 +1,5 @@
 {#each resizers as resizer}
-    <Resizer side={resizer} 
+    <Resizer side={resizer}
              on:clicked 
              on:unclicked
              on:resize />

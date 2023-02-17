@@ -17,16 +17,14 @@
     export let side: AvailableSide = null;
     export let clicked = false;
 
+    let oldMousePosition: Point;
+
     $: left = side === 'left';
     $: right = side === 'right';
     $: top = side === 'top';
     $: bottom = side === 'bottom';
 
-    $readonly: clicked;
-
     const dispatch = createEventDispatcher();
-
-    let oldMousePosition: Point;
 
     const handleMouseDown = (e: MouseEvent) => {
         e.preventDefault();
@@ -39,7 +37,7 @@
     };
 
     $: handleMouseMove = (e: MouseEvent) => {
-        moveTo !== null && (() => {
+        side !== null && (() => {
             (['top', 'bottom'].includes(side, 0)) && clicked && 
                 dispatch('resize', {
                     size: { height: e.y }, 
@@ -63,6 +61,8 @@
         clicked = false;
         dispatch('unclicked');
     };
+
+    $readonly: clicked;
 </script>
 
 <script lang='ts' context='module'>
@@ -83,7 +83,6 @@
 
 <style scoped>
     .resizer {
-        /* background-color: black; */
         background-color: transparent;
         position: absolute;
         box-sizing: border-box;

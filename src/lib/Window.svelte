@@ -1,17 +1,30 @@
-<section class:window={true}
-         class:rounded
-         style:--header-width={`${(windowWidth ?? 500)}px`}
-         bind:offsetWidth={windowWidth}
-         bind:offsetHeight={windowHeight}>
-    <MainHeader logo={SvelteLogo} 
-                bind:this={header.component}
-                bind:ref={header.element}
-                bind:headerHeight
-                bind:maxified
-                bind:title
-                bind:rounded
-                resizable={true} />
+<section 
+    class:window={true}
+    class:rounded
+       
+    style:--header-width={`${(windowWidth ?? 500)}px`}
+    style:--window-position={windowPositionCss}
+         
+    style:left={windowPosition.x + 'px'}
+    style:top={windowPosition.y + 'px'}
 
+    style:width={_width} 
+    style:height={_height}
+    style:min-width={_minWidth} 
+    style:min-height={_minHeight}
+
+    bind:offsetWidth={windowWidth}
+    bind:offsetHeight={windowHeight}>
+    <MainHeader 
+        bind:this={header.component}
+        bind:ref={header.element}
+        bind:headerHeight
+        bind:maxified
+        bind:title
+        bind:rounded
+        logo={SvelteLogo} 
+        resizable={isResizable} />
+    
     <main>
         <slot />
     </main>
@@ -19,21 +32,40 @@
 
 <script lang='ts'>
     import { getContext } from "svelte";
-    import type { MovableZoneElementContext, MovableContext, MovableZoneElement, PositionContext } from "./Movable.svelte";
+    import type { 
+        MovableZoneElementContext, 
+        MovableContext, 
+        MovableZoneElement, 
+        PositionContext, 
+        Point 
+    } from "./Movable.svelte";
     import type { ResizableContext, WindowSizeContext } from "./Resizable.svelte";
     import SvelteLogo from '../assets/svelte.svg';
     import MainHeader from "./WindowMainHeader.svelte";
 
     const movableContext = getContext<MovableContext>('movable');
     const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
-    const windowPosition = getContext<PositionContext>('window-position');
+    const windowPositionContext = getContext<PositionContext>('window-position');
 
     const resizableContext = getContext<ResizableContext>('resizable');
     const windowSizeContext = getContext<WindowSizeContext>('window-size');
     getContext<WindowSizeContext>('min-size')?.set({ width: 500, height: 500 });
 
     export let rounded = false;
+
     export let title = '';
+
+    export let width: number = null;
+    export let height: number = null;
+
+    export let positionX: number = null;
+    export let positionY: number = null;
+
+    export let minWidth: number = null;
+    export let minHeight: number = null;
+
+    export let windowWidth: number = 0;
+    export let windowHeight: number = 0;
     
     let maxified = false;
     let headerHeight: number;
@@ -43,18 +75,34 @@
         component: null,
         element: null
     };
+    let windowPosition: Point = { x: 0, y: 0 };
 
-    $: header.component && movableZoneElementContext.set(header);
-    $: header.element && movableZoneElementContext.set(header);
+    $: header.component && movableZoneElementContext?.set(header);
+    $: header.element && movableZoneElementContext?.set(header);
 
-    export let windowWidth: number;
-    export let windowHeight: number;
+    $: _width = isResizable ? '100%' : (width ?? 0) + 'px';
+    $: _height = isResizable ? '100%' : (height ?? 0) + 'px';
+
+    $: _minWidth = isResizable ? null : (minWidth ?? 0) + 'px';
+    $: _minHeight = isResizable ?  null : (minHeight ?? 0) + 'px';
+
+    $: windowPosition.x = isMovable ? 0 : positionX;
+    $: windowPosition.y = isMovable ? 0 : positionY;
+
+    $: windowPositionCss = isResizable ? 'relative' : 'absolute';
 
     resizableContext?.subscribe(v => (isResizable = v));
     movableContext?.subscribe(v => (isMovable = v));
+    windowPositionContext?.subscribe(v => {
+        !isResizable && (windowPosition.x = v.x);
+        !isResizable && (windowPosition.y = v.y);
+    });
 
     $: isResizable && windowSizeContext.update(v => ({...v, width: windowWidth}));
     $: isResizable && windowSizeContext.update(v => ({...v, height: windowHeight}));
+
+    $: positionX && isMovable && windowPositionContext.update(v => ({ ...v, x: positionX }));
+    $: positionY && isMovable && windowPositionContext.update(v => ({ ...v, y: positionY }));
 
     $readonly: windowWidth;
     $readonly: windowHeight;
@@ -67,6 +115,8 @@
         --border-size: 1px;
 
         --title-color: black;
+
+        --window-position: absolute;
     }
 
     section.window {
@@ -75,7 +125,7 @@
         height: 100%;
         border-style: solid;
         box-sizing: border-box;
-        position: relative;
+        position: var(--window-position);
 
         border-color: var(--border-color);
         border-width: var(--border-size);
