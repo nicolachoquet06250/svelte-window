@@ -49,6 +49,7 @@
         --header-border-size: 1px;
         --header-height: 40px;
         --header-width: 0px;
+        user-select: none;
     }
 
     header {
@@ -134,7 +135,7 @@
     header > .actions > button.close:hover {
         color: white;
         background-color: red;
-        border-color: white;
+        border-color: red;
     }
 
     header.rounded {
