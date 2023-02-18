@@ -224,7 +224,6 @@
         position: absolute;
         top: var(--position-y);
         left: var(--position-x);
-        transition: top .2s linear, bottom .2s linear, left .2s linear, right .2s linear;
     }
 
     .resizable.fullscreen {
@@ -232,5 +231,10 @@
         --position-y: 0px!important;
         right: 0;
         bottom: 0;
+        transition: 
+            top .2s linear, 
+            bottom .2s linear, 
+            left .2s linear, 
+            right .2s linear;
     }
 </style>

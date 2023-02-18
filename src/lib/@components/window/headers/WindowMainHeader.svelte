@@ -70,7 +70,6 @@
         --header-border-size: 1px;
         --header-height: 40px;
         --header-width: 0px;
-        user-select: none;
     }
 
     header {
@@ -88,6 +87,7 @@
         border-bottom-style: solid;
         border-bottom-width: var(--header-border-size);
         border-bottom-color: var(--header-border-color);
+        user-select: none;
     }
 
     header > img {
@@ -99,6 +99,9 @@
         color: var(--title-color);
         display: inline-block;
         flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     header > .actions {
