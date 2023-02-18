@@ -10,6 +10,7 @@
     import { writable } from "svelte/store";
     import type { Writable } from "svelte/store";
     import type { CSSCursor } from "../../@tools/cursors";
+    import type { FullscreenContext } from "./Resizable.svelte";
 
     let zoneElement: MovableZoneElement = {
         component: null,
@@ -20,23 +21,30 @@
     let inMove = false;
     let windowPosition: Point = { x: 0, y: 0 };
     let oldMousePosition: Point = { x: 0, y: 0 };
+    let fullscreen: boolean = false;
 
     setContext('movable', writable(true));
-    const movableZoneElementContext = setContext<MovableZoneElementContext>(
-        'movable-zone-element', 
-        writable({
-            component: null,
-            element: null
-        })
-    );
     const windowPositionContext = hasContext('window-position') ? 
         getContext<PositionContext>('window-position') : 
             setContext<PositionContext>('window-position', writable({ x: 0, y: 0 }));
+    const movableZoneElementContext = hasContext('movable-zone-element') ? 
+        getContext<MovableZoneElementContext>('movable-zone-element') : 
+            setContext<MovableZoneElementContext>(
+                'movable-zone-element', 
+                writable({ component: null, element: null })
+            );
+    const fullscreenContext = getContext<FullscreenContext>('fullscreen');
     
     windowPositionContext.subscribe(v => {
         if (v.y >= 0) {
             windowPosition = v;
         }
+    });
+    fullscreenContext?.subscribe(v => (fullscreen = v));
+
+    movableZoneElementContext.subscribe(v => {
+        v?.component && (zoneElement.component = v.component);
+        v?.element && (zoneElement.element = v.element);
     });
 
     onMount(() => {
@@ -54,16 +62,18 @@
         e.preventDefault();
         e.stopPropagation();
 
-        cursor = 'move';
-        inMove = true;
-        oldMousePosition = {
-            x: e.clientX,
-            y: e.clientY
-        };
-        zoneElement?.component?.$$set({
-            ...(zoneElement?.component.$$prop_def ?? {}),
-            cursor: 'move' as CSSCursor
-        });
+        if (!fullscreen) {
+            cursor = 'move';
+            inMove = true;
+            oldMousePosition = {
+                x: e.clientX,
+                y: e.clientY
+            };
+            zoneElement?.component?.$$set({
+                ...(zoneElement?.component.$$prop_def ?? {}),
+                cursor: 'move' as CSSCursor
+            });
+        }
     };
 
     const handleMouseUp = (e: MouseEvent) => {
@@ -80,7 +90,7 @@
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-        inMove && (() => {
+        if (inMove && !fullscreen) {
             if (windowPosition.x + (e.clientX - oldMousePosition.x) >= 0) {
                 windowPosition.x += e.clientX - oldMousePosition.x;
             }
@@ -94,22 +104,16 @@
             };
 
             windowPositionContext.set({ ...windowPosition });
-        })()
+        }
     };
 
-    $: zoneElement && (() => {
+    $: zoneElement && !fullscreen && 
         zoneElement.element?.addEventListener('mousedown', handleMouseDown);
-    })();
-    $: document.body.style.cursor = cursor;
-
-    movableZoneElementContext.subscribe(v => {
-        v?.component && (zoneElement.component = v.component);
-        v?.element && (zoneElement.element = v.element);
-    });
+    $: fullscreen && (document.body.style.cursor = cursor);
 </script>
 
 <script lang='ts' context='module'>
-    export type MovableContext = Writable<boolean> | undefined;
+    export type MovableContext = Writable<boolean>;
     export type MovableZoneElement = {
         component: (ATypedSvelteComponent & Partial<{ 
             $$set: (v: Record<string, any>) => void,
@@ -121,6 +125,3 @@
     export type Point = { x: number, y: number };
     export type PositionContext = Writable<Point>;
 </script>
-
-<style scoped>
-</style>

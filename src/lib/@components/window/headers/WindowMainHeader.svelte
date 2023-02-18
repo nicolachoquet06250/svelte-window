@@ -13,7 +13,7 @@
                 <i class="fa-solid fa-window-restore"></i>
             </button>
         {:else}
-            <button class:maxify disabled={!resizable}> □ </button>
+            <button class:maxify disabled={!resizable} on:click={handleMaxify}> □ </button>
         {/if}
         <button class:close> x </button>
     </div>
@@ -22,8 +22,10 @@
 <script lang='ts'>
     import { getContext } from "svelte";
     import { get_current_component, onMount } from "svelte/internal";
+    import { get } from "svelte/store";
     import type { CSSCursor } from "../../../@tools/cursors";
     import type { MovableZoneElementContext } from "../../Movable.svelte";
+    import type { FullscreenContext } from "../Resizable.svelte";
 
     export let headerHeight: number;
     export let logo: string;
@@ -39,6 +41,11 @@
     $readonly: headerHeight;
     
     const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
+    const fullscreenContext = getContext<FullscreenContext>('fullscreen');
+
+    const handleMaxify = () => {
+        fullscreenContext.set(!get(fullscreenContext));
+    };
 
     const self = get_current_component();
 

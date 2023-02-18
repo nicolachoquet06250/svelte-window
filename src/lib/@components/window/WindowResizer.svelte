@@ -4,6 +4,7 @@
         class:top
         class:bottom
         class:clicked
+        class:fullscreen
         on:mousedown={handleMouseDown}
         on:mouseup={handleMouseUp} />
 
@@ -11,13 +12,15 @@
                 on:mousemove={handleMouseMove} />
 
 <script lang='ts'>
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, getContext } from "svelte";
     import type { Point } from "./Movable.svelte";
+    import type { FullscreenContext } from "./Resizable.svelte";
 
     export let side: AvailableSide = null;
     export let clicked = false;
 
     let oldMousePosition: Point;
+    let fullscreen: boolean = false;
 
     $: left = side === 'left';
     $: right = side === 'right';
@@ -25,6 +28,10 @@
     $: bottom = side === 'bottom';
 
     const dispatch = createEventDispatcher();
+    
+    const fullscreenContext = getContext<FullscreenContext>('fullscreen');
+
+    fullscreenContext?.subscribe(v => (fullscreen = v));
 
     const handleMouseDown = (e: MouseEvent) => {
         e.preventDefault();
@@ -89,6 +96,10 @@
         border: none;
         padding: 0;
         margin: 0;
+    }
+
+    .resizer.fullscreen {
+        cursor: default!important;
     }
 
     .left {
