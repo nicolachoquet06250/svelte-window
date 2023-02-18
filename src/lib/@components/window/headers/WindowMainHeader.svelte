@@ -20,10 +20,12 @@
 </header>
 
 <script lang='ts'>
-    import type { CSSCursor } from "./helpers/cursors";
+    import { getContext } from "svelte";
+    import { get_current_component, onMount } from "svelte/internal";
+    import type { CSSCursor } from "../../../@tools/cursors";
+    import type { MovableZoneElementContext } from "../../Movable.svelte";
 
     export let headerHeight: number;
-    export let ref: HTMLElement = null;
     export let logo: string;
     export let title: string;
     export let maxified: boolean;
@@ -32,8 +34,20 @@
     export let resizable = true;
     export let cursor: CSSCursor = 'default';
 
+    let ref: HTMLElement = null;
+
     $readonly: headerHeight;
-    $readonly: ref;
+    
+    const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
+
+    const self = get_current_component();
+
+    onMount(() => {
+        movableZoneElementContext?.set({
+            element: ref,
+            component: self
+        });
+    })
 
     const actions = true, 
           tidy = true, 

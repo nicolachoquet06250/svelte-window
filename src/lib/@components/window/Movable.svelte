@@ -6,12 +6,15 @@
 />
 
 <script lang='ts'>
-    import { setContext, SvelteComponent, onMount, hasContext, getContext } from "svelte";
+    import { setContext, onMount, hasContext, getContext } from "svelte";
     import { writable } from "svelte/store";
     import type { Writable } from "svelte/store";
-    import type { CSSCursor } from "./helpers/cursors";
+    import type { CSSCursor } from "../../@tools/cursors";
 
-    let zoneElement: MovableZoneElement = null;
+    let zoneElement: MovableZoneElement = {
+        component: null,
+        element: null
+    };
 
     let cursor: CSSCursor = 'default';
     let inMove = false;
@@ -19,7 +22,7 @@
     let oldMousePosition: Point = { x: 0, y: 0 };
 
     setContext('movable', writable(true));
-    const movableZoneElement = setContext<MovableZoneElementContext>(
+    const movableZoneElementContext = setContext<MovableZoneElementContext>(
         'movable-zone-element', 
         writable({
             component: null,
@@ -57,8 +60,8 @@
             x: e.clientX,
             y: e.clientY
         };
-        zoneElement.component?.$$set({
-            ...zoneElement.component.$$prop_def,
+        zoneElement?.component?.$$set({
+            ...(zoneElement?.component.$$prop_def ?? {}),
             cursor: 'move' as CSSCursor
         });
     };
@@ -70,8 +73,8 @@
         cursor = 'default';
         inMove = false;
         oldMousePosition = { x: 0, y: 0 };
-        zoneElement.component?.$$set({
-            ...zoneElement.component.$$prop_def,
+        zoneElement?.component?.$$set({
+            ...(zoneElement?.component.$$prop_def ?? {}),
             cursor: 'default' as CSSCursor
         });
     };
@@ -99,13 +102,19 @@
     })();
     $: document.body.style.cursor = cursor;
 
-    movableZoneElement.subscribe(v => (zoneElement = v));
+    movableZoneElementContext.subscribe(v => {
+        v?.component && (zoneElement.component = v.component);
+        v?.element && (zoneElement.element = v.element);
+    });
 </script>
 
 <script lang='ts' context='module'>
     export type MovableContext = Writable<boolean> | undefined;
     export type MovableZoneElement = {
-        component: SvelteComponent,
+        component: (ATypedSvelteComponent & Partial<{ 
+            $$set: (v: Record<string, any>) => void,
+            $$prop_def: Record<string, any>
+        }>) | null,
         element: HTMLElement
     };
     export type MovableZoneElementContext = Writable<MovableZoneElement>;

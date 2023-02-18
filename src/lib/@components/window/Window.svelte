@@ -15,33 +15,33 @@
 
     bind:offsetWidth={windowWidth}
     bind:offsetHeight={windowHeight}>
-    <MainHeader 
-        bind:this={header.component}
-        bind:ref={header.element}
-        bind:headerHeight
-        bind:maxified
-        bind:title
-        bind:rounded
-        logo={SvelteLogo} 
-        resizable={isResizable} />
-    
+    {#if Header}
+        <svelte:component 
+            this={Header}
+            bind:headerHeight
+            bind:maxified
+            bind:title
+            bind:rounded
+            logo={SvelteLogo} 
+            resizable={isResizable} />
+    {/if}
     <main>
         <slot />
     </main>
 </section>
 
 <script lang='ts'>
-    import { getContext } from "svelte";
+    import { getContext, onMount, SvelteComponentTyped } from "svelte";
     import type { 
         MovableZoneElementContext, 
         MovableContext, 
         MovableZoneElement, 
         PositionContext, 
         Point 
-    } from "./Movable.svelte";
-    import type { ResizableContext, WindowSizeContext } from "./Resizable.svelte";
-    import SvelteLogo from '../assets/svelte.svg';
-    import MainHeader from "./WindowMainHeader.svelte";
+    } from "../Movable.svelte";
+    import type { ResizableContext, WindowSizeContext } from "../Resizable.svelte";
+    import SvelteLogo from '../../../assets/svelte.svg';
+    import { get } from "svelte/store";
 
     const movableContext = getContext<MovableContext>('movable');
     const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
@@ -49,7 +49,11 @@
 
     const resizableContext = getContext<ResizableContext>('resizable');
     const windowSizeContext = getContext<WindowSizeContext>('window-size');
-    getContext<WindowSizeContext>('min-size')?.set({ width: 500, height: 500 });
+    const minSizeContext = getContext<WindowSizeContext>('min-size');
+
+    onMount(() => {
+        minSizeContext?.set({ width: 500, height: 500 });
+    });
 
     export let rounded = false;
 
@@ -66,6 +70,8 @@
 
     export let windowWidth: number = 0;
     export let windowHeight: number = 0;
+
+    export let Header: ConstructorOfATypedSvelteComponent = null;
     
     let maxified = false;
     let headerHeight: number;
@@ -76,9 +82,6 @@
         element: null
     };
     let windowPosition: Point = { x: 0, y: 0 };
-
-    $: header.component && movableZoneElementContext?.set(header);
-    $: header.element && movableZoneElementContext?.set(header);
 
     $: _width = isResizable ? '100%' : (width ?? 0) + 'px';
     $: _height = isResizable ? '100%' : (height ?? 0) + 'px';
@@ -97,6 +100,12 @@
         !isResizable && (windowPosition.x = v.x);
         !isResizable && (windowPosition.y = v.y);
     });
+    movableZoneElementContext?.subscribe(v => {
+        v.component && v.element && (() => {
+            header.component = v.component;
+            header.element = v.element;
+        })();
+    });
 
     $: isResizable && windowSizeContext.update(v => ({...v, width: windowWidth}));
     $: isResizable && windowSizeContext.update(v => ({...v, height: windowHeight}));
@@ -104,8 +113,23 @@
     $: positionX && isMovable && windowPositionContext.update(v => ({ ...v, x: positionX }));
     $: positionY && isMovable && windowPositionContext.update(v => ({ ...v, y: positionY }));
 
+    $: header.element && movableZoneElementContext?.set({...get(movableZoneElementContext), element: header.element});
+
     $readonly: windowWidth;
     $readonly: windowHeight;
+</script>
+
+<script lang='ts' context='module'>
+    type HeaderProps = {
+        headerHeight: number,
+        maxified: boolean,
+        title: string,
+        logo: string,
+        resizable: boolean
+    };
+    type HeaderEvents = {};
+
+    export type HeaderComponent = SvelteComponentTyped<HeaderProps, HeaderEvents, {}>;
 </script>
 
 <style scoped>

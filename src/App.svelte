@@ -12,7 +12,9 @@
     
     width={600} height={600}
     
-    positionX={100} positionY={200}>
+    positionX={100} positionY={200}
+    
+    Header={MainHeader}>
     <div style:padding-left="5px"
           style:padding-right="5px">
       <h2>Coucou</h2>
@@ -36,7 +38,9 @@
         
         positionX={300} positionY={400}
         
-        rounded={true}>
+        rounded={true}
+    
+        Header={MainHeader}>
         <div style:padding-left="5px"
               style:padding-right="5px">
           <h2>Coucou</h2>
@@ -59,7 +63,9 @@
       
       width={600} height={600}
       
-      positionX={50}>
+      positionX={50}
+    
+      Header={MainHeader}>
       <div style:padding-left="5px"
             style:padding-right="5px">
         <h2>Coucou</h2>
@@ -69,18 +75,21 @@
 
   <Resizable>
     <Movable>
-      <Window --border-color='black'
+      <Window 
+        --border-color='black'
 
-              --header-bg-color='lightgray'
-              --header-border-color='black'
-              --header-border-size='1px'
+        --header-bg-color='lightgray'
+        --header-border-color='black'
+        --header-border-size='1px'
 
-              --title-color='black'
+        --title-color='black'
 
-              title='Mon application movable & resizable'
+        title='Mon application movable & resizable'
 
-              width={600}
-              height={600}>
+        width={600}
+        height={600}
+
+        Header={MainHeader}>
         <div style:padding-left="5px"
              style:padding-right="5px">
           <h2>Coucou</h2>
@@ -91,9 +100,10 @@
 </main>
 
 <script lang="ts">
-  import Movable from "./lib/Movable.svelte";
-  import Resizable from "./lib/Resizable.svelte";
-  import Window from "./lib/Window.svelte";
+    import Movable from "./lib/@components/window/Movable.svelte";
+    import Resizable from "./lib/@components/window/Resizable.svelte";
+    import Window from "./lib/@components/window/Window.svelte";
+    import MainHeader from "./lib/@components/window/headers/WindowMainHeader.svelte";
 </script>
 
 <style>
