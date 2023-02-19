@@ -70,13 +70,11 @@
 
         // avant l'index à bouger
         for (let i = 0; i <= currentIndex - 1; i++) {
-            console.log('i b', i);
             newWindowList.push(oldWindowList[i]);
         }
 
         // apres l'index à bouger
         for (let i = currentIndex + 1; i <= nextCurrentIndex; i++) {
-            console.log('i', i);
             newWindowList.push(oldWindowList[i]);
         }
 
