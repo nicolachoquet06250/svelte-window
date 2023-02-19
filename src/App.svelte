@@ -43,7 +43,7 @@
         title='Mon application rounded & movable & resizable reversed'
         width={600} height={600}
         positionX={0} positionY={500}
-        rounded={true} Header={MainHeader}>
+        rounded={true} Header={MacOsHeader}>
         <DefaultWindowContent />
       </Window>
     </Movable>
@@ -76,4 +76,5 @@
     import Window from "./lib/@components/window/Window.svelte";
     import MainHeader from "./lib/@components/window/headers/WindowMainHeader.svelte";
     import DefaultWindowContent from "./lib/@components/DefaultWindowContent.svelte";
+  import MacOsHeader from "./@components/headers/MacOsHeader.svelte";
 </script>
