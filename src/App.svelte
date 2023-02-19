@@ -67,7 +67,12 @@
 </main>
 
 <svelte:head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" 
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" 
+        crossorigin="anonymous" 
+        referrerpolicy="no-referrer" />
+  <title> svelte-window : Systeme de fenetrage pour Svelte.js </title>
 </svelte:head>
 
 <script lang="ts">
@@ -77,4 +82,5 @@
     import MainHeader from "./lib/@components/window/headers/WindowMainHeader.svelte";
     import DefaultWindowContent from "./lib/@components/DefaultWindowContent.svelte";
   import MacOsHeader from "./@components/headers/MacOsHeader.svelte";
+  import { SvelteComponent } from "svelte";
 </script>
