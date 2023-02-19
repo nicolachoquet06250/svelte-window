@@ -1,13 +1,15 @@
 <section 
+    bind:this={$target}
+
     class:window={true}
     class:rounded
        
     style:--header-width={`${(windowWidth ?? 500)}px`}
     style:--window-position={windowPositionCss}
+    style:--z-index={$windowList.indexOf(title)}
          
     style:left={windowPosition.x + 'px'}
     style:top={windowPosition.y + 'px'}
-
     style:width={_width} 
     style:height={_height}
     style:min-width={_minWidth} 
@@ -25,6 +27,7 @@
             logo={SvelteLogo} 
             resizable={isResizable} />
     {/if}
+    
     <main>
         <slot />
     </main>
@@ -39,9 +42,11 @@
         PositionContext, 
         Point 
     } from "./Movable.svelte";
-    import type { ResizableContext, WindowSizeContext } from "./Resizable.svelte";
+    import type { ResizableContext, WindowSizeContext } from "./resizer/Resizable.svelte";
     import SvelteLogo from '../../../assets/svelte.svg';
     import { get, type Writable } from "svelte/store";
+    import { windowList } from "../../@tools/window-list";
+    import { useEventListener, writable } from "@svelte-use/core";
 
     const movableContext = getContext<MovableContext>('movable');
     const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
@@ -52,10 +57,50 @@
     const minSizeContext = getContext<WindowSizeContext>('min-size');
 
     const titleContext = getContext<Writable<string>>('title');
+    
+    const target = writable<HTMLElement>();
+    useEventListener(target, 'click', () => {
+        const oldWindowList = [ ...$windowList ];
+        const newWindowList = [];
+
+        const currentIndex = $windowList.indexOf(title);
+        const nextCurrentIndex = Array.from(
+            oldWindowList.keys()
+        ).reduce((r, c) => c > r ? c : r, 0);
+
+        // avant l'index à bouger
+        for (let i = 0; i <= currentIndex - 1; i++) {
+            console.log('i b', i);
+            newWindowList.push(oldWindowList[i]);
+        }
+
+        // apres l'index à bouger
+        for (let i = currentIndex + 1; i <= nextCurrentIndex; i++) {
+            console.log('i', i);
+            newWindowList.push(oldWindowList[i]);
+        }
+
+        // l'index à bouger
+        newWindowList.push(title);
+
+        $windowList = newWindowList;
+    });
 
     onMount(() => {
-        minSizeContext?.set({ width: 500, height: 500 });
+        minSizeContext?.set({
+            width: 500,
+            height: 500
+        });
         titleContext?.set(title);
+        
+        setTimeout(() => {
+            $windowList = [...$windowList, title];
+        }, 0);
+
+        return () => {
+            $windowList = $windowList
+                .filter(v => v !== title);
+        }
     });
 
     export let rounded = false;
@@ -109,6 +154,7 @@
             header.element = v.element;
         })();
     });
+    windowList.subscribe(v => v.indexOf(title))
 
     $: isResizable && windowSizeContext.update(v => ({...v, width: windowWidth}));
     $: isResizable && windowSizeContext.update(v => ({...v, height: windowHeight}));
@@ -144,6 +190,7 @@
         --title-color: black;
 
         --window-position: absolute;
+        --z-index: 0;
     }
 
     section.window {
@@ -153,6 +200,7 @@
         border-style: solid;
         box-sizing: border-box;
         position: var(--window-position);
+        z-index: var(--z-index);
 
         border-color: var(--border-color);
         border-width: var(--border-size);

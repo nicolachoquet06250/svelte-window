@@ -1,8 +1,6 @@
 <button class:resizer={true}
-        class:left
-        class:right
-        class:top
-        class:bottom
+        class:left class:right
+        class:top class:bottom
         class:clicked
         class:fullscreen
         on:mousedown={handleMouseDown}
@@ -13,7 +11,7 @@
 
 <script lang='ts'>
     import { createEventDispatcher, getContext } from "svelte";
-    import type { Point } from "./Movable.svelte";
+    import type { Point } from "../Movable.svelte";
     import type { FullscreenContext } from "./Resizable.svelte";
 
     export let side: AvailableSide = null;
@@ -90,12 +88,14 @@
 
 <style scoped>
     .resizer {
-        background-color: transparent;
+        /* background-color: transparent; */
+        background-color: red;
         position: absolute;
         box-sizing: border-box;
         border: none;
         padding: 0;
         margin: 0;
+        z-index: var(--z-index);
     }
 
     .resizer.fullscreen {

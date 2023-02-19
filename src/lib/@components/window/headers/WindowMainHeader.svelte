@@ -1,21 +1,32 @@
 <header bind:offsetHeight={headerHeight}
         bind:this={ref}
-        style:cursor
-        class:rounded>
+        style:cursor class:rounded>
     <img src={logo} alt='logo' />
 
-    <span>{title}</span>
+    <span>
+        {title}
+    </span>
 
     <div class:actions>
-        <button class:tidy> - </button>
+        <button class:tidy> 
+            - 
+        </button>
+
         {#if maxified}
             <button class:minify>
-                <i class="fa-solid fa-window-restore"></i>
+                <i class="fa-solid fa-window-restore"/>
             </button>
         {:else}
-            <button class:maxify disabled={!resizable} on:click={handleMaxify}> □ </button>
+            <button class:maxify 
+                    disabled={!resizable} 
+                    on:click={handleMaxify}> 
+                □ 
+            </button>
         {/if}
-        <button class:close> x </button>
+
+        <button class:close>
+            x
+        </button>
     </div>
 </header>
 
@@ -24,8 +35,8 @@
     import { get_current_component, onMount } from "svelte/internal";
     import { get } from "svelte/store";
     import type { CSSCursor } from "../../../@tools/cursors";
-    import type { MovableZoneElementContext } from "../../Movable.svelte";
-    import type { FullscreenContext } from "../Resizable.svelte";
+    import type { MovableZoneElementContext } from "../Movable.svelte";
+    import type { FullscreenContext } from "../resizer/Resizable.svelte";
 
     export let headerHeight: number;
     export let logo: string;
@@ -40,12 +51,15 @@
 
     $readonly: headerHeight;
     
-    const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
-    const fullscreenContext = getContext<FullscreenContext>('fullscreen');
+    const movableZoneElementContext = getContext<
+        MovableZoneElementContext
+    >('movable-zone-element');
+    const fullscreenContext = getContext<
+        FullscreenContext
+    >('fullscreen');
 
-    const handleMaxify = () => {
+    const handleMaxify = () => 
         fullscreenContext.set(!get(fullscreenContext));
-    };
 
     const self = get_current_component();
 

@@ -19,6 +19,6 @@
     "vite": "^4.1.0"
   },
   "dependencies": {
-    "svelte-outside-click": "^1.1.1"
+    "@svelte-use/core": "^0.11.0"
   }
 }

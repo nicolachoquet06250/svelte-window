@@ -1,6 +1,8 @@
-<div use:clickOutside={handleClickOutside}
+<div bind:this={$target}
      class:resizable={true}
      class:fullscreen
+
+     style:--z-index={$windowList.indexOf($titleContext)}
 
      style:min-width={minWidth + 'px'}
      style:min-height={minHeight + 'px'}
@@ -21,13 +23,14 @@
 
 <script lang='ts'>
     import { getContext, hasContext, onMount, setContext } from "svelte";
-    import { get, writable } from "svelte/store";
+    import { writable } from "svelte/store";
     import type { Writable } from "svelte/store";
     import type { ClickedEvent, ResizeEvent } from "./WindowResizer.svelte";
     import type { AvailableSide } from "./WindowResizer.svelte";
     import ResizerGroup from "./WindowResizerGroup.svelte";
-    import type { MovableZoneElement, MovableZoneElementContext, Point, PositionContext } from "./Movable.svelte";
-    import clickOutside from 'svelte-outside-click';
+    import type { MovableZoneElement, MovableZoneElementContext, Point, PositionContext } from "../Movable.svelte";
+    import { writable as clickOutsideWritable, onClickOutside, useEventListener } from '@svelte-use/core'
+    import { windowList } from "../../../@tools/window-list";
 
     let minWidth: number;
     let minHeight: number;
@@ -194,7 +197,7 @@
     };
 
     $: handleDblClick = () => {
-        fullscreenContext.set(!get(fullscreenContext));
+        fullscreenContext.set(!$fullscreenContext);
     };
     
     fullscreenContext.subscribe(v => (fullscreen = v))
@@ -210,9 +213,14 @@
         }
     });
 
-    const handleClickOutside = () => {
-        console.log('outside', $titleContext);
-    }
+    const target = clickOutsideWritable<HTMLDivElement>();
+    onClickOutside(target, () => {
+        // console.log('outside', $titleContext);
+    });
+
+    useEventListener(target, 'click', e => {
+        // console.log(e)
+    })
 </script>
 
 <script lang='ts' context='module'>

@@ -151,6 +151,18 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@svelte-use/core@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@svelte-use/core/-/core-0.11.0.tgz#bdd64355b52cfdc24f10dea2443bb28720820329"
+  integrity sha512-w58IznFv+NYBYihFaAb5E144Q0ycwcL9BFu8hXmrKEcsu6PnRN6kaSUjwCReUU5bBoMRBNOQxRS7SSjmv50BlQ==
+  dependencies:
+    "@svelte-use/shared" "0.11.0"
+
+"@svelte-use/shared@0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@svelte-use/shared/-/shared-0.11.0.tgz#240be90384dbe5b6d1f17bf43063c2efe1c83c61"
+  integrity sha512-BSVntGonFe042N+LJFhQHI4yvQC5VmCIFhSZqRflovwib6PhFXR/ZsdKSzfgoH4lXql93R4t7+35grICcaBbzw==
+
 "@sveltejs/vite-plugin-svelte@^2.0.2":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-2.0.2.tgz#943090239a31b2e0546837ff7649b73aeb46614c"
@@ -659,11 +671,6 @@ svelte-hmr@^0.15.1:
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.15.1.tgz#d11d878a0bbb12ec1cba030f580cd2049f4ec86b"
   integrity sha512-BiKB4RZ8YSwRKCNVdNxK/GfY+r4Kjgp9jCLEy0DuqAKfmQtpL38cQK3afdpjw4sqSs4PLi3jIPJIFp259NkZtA==
-
-svelte-outside-click@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/svelte-outside-click/-/svelte-outside-click-1.1.1.tgz#74ac668dc7e3def216fab7f8bd421e37284e7c1a"
-  integrity sha512-ndkeLX+U5kiENRgzunLOW7wJlYmV+iNRQ0oNamM7lUoHdr68SM2LkFFWrrSfBWlnFaGEvo0PkVXGOU1xzdrIdg==
 
 svelte-preprocess@^4.0.0:
   version "4.10.7"

@@ -10,7 +10,7 @@
     import { writable } from "svelte/store";
     import type { Writable } from "svelte/store";
     import type { CSSCursor } from "../../@tools/cursors";
-    import type { FullscreenContext } from "./Resizable.svelte";
+    import type { FullscreenContext } from "./resizer/Resizable.svelte";
 
     let zoneElement: MovableZoneElement = {
         component: null,
