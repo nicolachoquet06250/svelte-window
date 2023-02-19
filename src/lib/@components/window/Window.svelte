@@ -38,8 +38,8 @@
         MovableZoneElement, 
         PositionContext, 
         Point 
-    } from "../Movable.svelte";
-    import type { ResizableContext, WindowSizeContext } from "../Resizable.svelte";
+    } from "./Movable.svelte";
+    import type { ResizableContext, WindowSizeContext } from "./Resizable.svelte";
     import SvelteLogo from '../../../assets/svelte.svg';
     import { get, type Writable } from "svelte/store";
 
