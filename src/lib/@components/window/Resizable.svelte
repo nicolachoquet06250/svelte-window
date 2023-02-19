@@ -1,4 +1,5 @@
-<div class:resizable={true}
+<div use:clickOutside={handleClickOutside}
+     class:resizable={true}
      class:fullscreen
 
      style:min-width={minWidth + 'px'}
@@ -26,6 +27,7 @@
     import type { AvailableSide } from "./WindowResizer.svelte";
     import ResizerGroup from "./WindowResizerGroup.svelte";
     import type { MovableZoneElement, MovableZoneElementContext, Point, PositionContext } from "./Movable.svelte";
+    import clickOutside from 'svelte-outside-click';
 
     let minWidth: number;
     let minHeight: number;
@@ -44,6 +46,7 @@
 
     // set des contextes
     setContext('resizable', writable(true));
+    const titleContext = setContext('title', writable(''));
     const fullscreenContext = setContext('fullscreen', writable(false));
     const minSizeContext = setContext('min-size', writable({
         width: 0,
@@ -67,6 +70,7 @@
         width: 0,
         height: 0
     };
+
     // computed & subscribes
     $: width = (() => {
         if (fullscreen) {
@@ -205,6 +209,10 @@
             zoneElement.element?.removeEventListener('dblclick', handleDblClick);
         }
     });
+
+    const handleClickOutside = () => {
+        console.log('outside', $titleContext);
+    }
 </script>
 
 <script lang='ts' context='module'>

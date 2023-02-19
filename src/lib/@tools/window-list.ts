@@ -3,6 +3,9 @@ import { get, writable } from "svelte/store";
 export const windowList = writable<Record<string, number>>({});
 export const focusedWindow = writable<string>();
 
+export const getWindowList = () => windowList;
+export const getFocusedWindow = () => focusedWindow;
+
 export const addWindow = (index: number, title: string) => {
     windowList.update(v => ({ ...v, [title]: index }));
 };
@@ -48,7 +51,3 @@ export const defineInitialFocusedWindow = (title: string) => {
         focusedWindow.set(list[title]);
     }, 0);
 };
-
-export const getWindowList = () => windowList;
-
-export const getFocusedWindow = () => focusedWindow;

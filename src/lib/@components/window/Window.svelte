@@ -41,7 +41,7 @@
     } from "../Movable.svelte";
     import type { ResizableContext, WindowSizeContext } from "../Resizable.svelte";
     import SvelteLogo from '../../../assets/svelte.svg';
-    import { get } from "svelte/store";
+    import { get, type Writable } from "svelte/store";
 
     const movableContext = getContext<MovableContext>('movable');
     const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
@@ -51,8 +51,11 @@
     const windowSizeContext = getContext<WindowSizeContext>('window-size');
     const minSizeContext = getContext<WindowSizeContext>('min-size');
 
+    const titleContext = getContext<Writable<string>>('title');
+
     onMount(() => {
         minSizeContext?.set({ width: 500, height: 500 });
+        titleContext?.set(title);
     });
 
     export let rounded = false;
