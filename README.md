@@ -1,5 +1,7 @@
 # Svelte + TS + Vite
 
+### [Démo](https://window.svelte.nicolaschoquet.fr)
+
 This template should help get you started developing with Svelte and TypeScript in Vite.
 
 ## Recommended IDE Setup
