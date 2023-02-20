@@ -43,10 +43,11 @@
         Point 
     } from "./Movable.svelte";
     import type { ResizableContext, WindowSizeContext } from "./resizer/Resizable.svelte";
-    import logo from '../../../assets/svelte.svg';
+    import defaultLogo from '../../../assets/svelte.svg';
     import { get, type Writable } from "svelte/store";
     import { useEventListener, writable } from "@svelte-use/core";
     import { useFocus, useTidyWindows } from "../../@composables";
+  import WindowMainHeader from "./headers/WindowMainHeader.svelte";
 
     const movableContext = getContext<MovableContext>('movable');
     const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
@@ -97,8 +98,10 @@
     export let windowWidth: number = 0;
     export let windowHeight: number = 0;
 
-    export let header: ConstructorOfATypedSvelteComponent = null;
+    export let header: ConstructorOfATypedSvelteComponent = WindowMainHeader;
     export let tidy: ConstructorOfATypedSvelteComponent = null;
+
+    export let logo = defaultLogo;
     
     let maxified = false;
     let headerHeight: number;
@@ -150,7 +153,6 @@
     const { list: tidyWindowList, tidy: tidyWindow } = useTidyWindows();
 
     const handleTidy = () => {
-        console.log('tidy', title);
         tidyWindow(tidy, {
             title,
             logo

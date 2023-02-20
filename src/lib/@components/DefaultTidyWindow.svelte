@@ -28,9 +28,9 @@
     div {
         width: 200px;
         height: 50px; 
-        border: 1px solid black; 
-        border-bottom: none; 
-        position: absolute; 
+        border: 1px solid black;
+        border-bottom: none;
+        border-top: none;
         bottom: 0;
         display: flex;
         align-items: center;

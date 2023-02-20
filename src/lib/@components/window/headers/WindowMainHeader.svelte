@@ -9,7 +9,8 @@
 
     <div class:actions>
         <button class:tidy 
-                disabled={!stowable}> 
+                disabled={!stowable}
+                on:click={handleTidy}> 
             - 
         </button>
 
@@ -33,13 +34,15 @@
 
 <script lang='ts'>
     import { useEventListener } from "@svelte-use/core";
-    import { getContext } from "svelte";
+    import { createEventDispatcher, getContext } from "svelte";
     import { get_current_component, onMount } from "svelte/internal";
     import { get } from "svelte/store";
     import { useFocus } from "../../../@composables";
     import type { CSSCursor } from "../../../@tools/cursors";
     import type { MovableZoneElementContext } from "../Movable.svelte";
     import type { FullscreenContext } from "../resizer/Resizable.svelte";
+
+    const dispatch = createEventDispatcher();
 
     export let headerHeight: number;
     export let logo: string;
@@ -79,6 +82,10 @@
     useEventListener(ref, 'mousedown', () => {
         focus(title);
     });
+
+    const handleTidy = () => {
+        dispatch('tidy');
+    }
 
     const actions = true, 
           tidy = true, 

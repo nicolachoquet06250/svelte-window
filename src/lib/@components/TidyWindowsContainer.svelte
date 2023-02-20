@@ -11,7 +11,6 @@
     const { list, upset } = useTidyWindows();
 
     const handleUpset = (id: string) => () => {
-        console.log('upset', $list[id].data.title);
         upset(id);
     };
 </script>

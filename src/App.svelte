@@ -11,10 +11,28 @@
           title='Mon application rounded & movable & resizable'
           width={600} height={600}
           positionX={0} positionY={0}
-          rounded={true} header={MainHeader}>
+          rounded={true}
+          tidy={DefaultTidyWindow}>
           <DefaultWindowContent />
         </Window>
     </Resizable>
+  </Movable>
+
+  <Movable>
+    <Window 
+      --border-color='black'
+      --header-bg-color='lightgray'
+      --header-border-color='black'
+      --header-border-size='1px'
+      --title-color='black'
+
+      title='Mon application movable'
+      width={600} height={600}
+      positionX={200} positionY={200}
+      tidy={DefaultTidyWindow}
+      {logo}>
+      <DefaultWindowContent />
+    </Window>
   </Movable>
   
   <Resizable>
@@ -36,25 +54,9 @@
       </Window>
     </Movable>
   </Resizable>
-
-  <Movable>
-    <Window 
-      --border-color='black'
-      --header-bg-color='lightgray'
-      --header-border-color='black'
-      --header-border-size='1px'
-      --title-color='black'
-
-      title='Mon application movable'
-      width={600} height={600}
-      positionX={200} positionY={200}
-      header={MainHeader}>
-      <DefaultWindowContent />
-    </Window>
-  </Movable>
 </main>
 
-<TidyWindowsContainer />
+<TaskBar />
 
 <svelte:head>
   <link rel="stylesheet" 
@@ -73,5 +75,7 @@
     import DefaultWindowContent from "./lib/@components/DefaultWindowContent.svelte";
     import MacOsHeader from "./@components/headers/MacOsHeader.svelte";
     import DefaultTidyWindow from "./lib/@components/DefaultTidyWindow.svelte";
-    import TidyWindowsContainer from "./lib/@components/TidyWindowsContainer.svelte";
+  import TaskBar from "./@components/TaskBar.svelte";
+
+    const logo = '/vite.svg'
 </script>
