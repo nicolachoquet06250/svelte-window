@@ -7,7 +7,7 @@
 
 <script lang='ts'>
     import { setContext, onMount, hasContext, getContext } from "svelte";
-    import { writable } from "svelte/store";
+    import { get, writable } from "svelte/store";
     import type { Writable } from "svelte/store";
     import type { CSSCursor } from "../../@tools/cursors";
     import type { FullscreenContext } from "./resizer/Resizable.svelte";
@@ -34,7 +34,9 @@
                 'movable-zone-element', 
                 writable({ component: null, element: null })
             );
-    const fullscreenContext = getContext<FullscreenContext>('fullscreen');
+    const fullscreenContext = hasContext('fullscreen') ? 
+        getContext<FullscreenContext>('fullscreen') : 
+            setContext('fullscreen', writable(false));
     const inMoveContext = hasContext('in-move') ? 
         getContext<Writable<boolean>>('in-move') : 
             setContext<Writable<boolean>>('in-move', writable(false));

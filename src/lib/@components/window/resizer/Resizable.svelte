@@ -23,13 +23,16 @@
 
 <script lang='ts'>
     import { getContext, hasContext, onMount, setContext } from "svelte";
-    import { writable } from "svelte/store";
+    import { get, writable } from "svelte/store";
     import type { Writable } from "svelte/store";
     import type { ClickedEvent, ResizeEvent } from "./WindowResizer.svelte";
     import type { AvailableSide } from "./WindowResizer.svelte";
     import ResizerGroup from "./WindowResizerGroup.svelte";
     import type { MovableZoneElement, MovableZoneElementContext, Point, PositionContext } from "../Movable.svelte";
     import { useFocus, useTidyWindows } from "../../../@composables";
+
+    const { list: tidyWindowList } = useTidyWindows();
+    const { list: windowList } = useFocus();
 
     const resizers: AvailableSide[] = [
         'left', 
@@ -58,7 +61,9 @@
     const titleContext = hasContext('title') ? 
         getContext<Writable<string>>('title') : 
             setContext<Writable<string>>('title', writable(''));
-    const fullscreenContext = setContext('fullscreen', writable(false));
+    const fullscreenContext = hasContext('fullscreen') ? 
+        getContext<FullscreenContext>('fullscreen') : 
+            setContext('fullscreen', writable(false));
     const minSizeContext = setContext('min-size', writable({
         width: 0,
         height: 0
@@ -212,24 +217,19 @@
     };
 
     $: handleDblClick = () => {
-        fullscreenContext.set(!$fullscreenContext);
+        fullscreenContext.set(!get(fullscreenContext));
     };
     
-    fullscreenContext.subscribe(v => (fullscreen = v))
-
-    $: zoneElement.element && (() => {
-        zoneElement.element.addEventListener('dblclick', handleDblClick);
-    })();
+    fullscreenContext.subscribe(v => (fullscreen = v));
 
     onMount(() => {
+        zoneElement.element.addEventListener('dblclick', handleDblClick);
+
         return () => {
             document.body.style.cursor = 'default';
             zoneElement.element?.removeEventListener('dblclick', handleDblClick);
         }
     });
-
-    const { list: tidyWindowList } = useTidyWindows();
-    const { list: windowList } = useFocus();
 </script>
 
 <script lang='ts' context='module'>

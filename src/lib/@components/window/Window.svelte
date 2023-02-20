@@ -47,7 +47,7 @@
     import { get, type Writable } from "svelte/store";
     import { useEventListener, writable } from "@svelte-use/core";
     import { useFocus, useTidyWindows } from "../../@composables";
-  import WindowMainHeader from "./headers/WindowMainHeader.svelte";
+    import WindowMainHeader from "./headers/WindowMainHeader.svelte";
 
     const movableContext = getContext<MovableContext>('movable');
     const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
@@ -73,9 +73,7 @@
         });
         titleContext?.set(title);
         
-        setTimeout(() => {
-            prepareWindow(title);
-        }, 0);
+        prepareWindow(title);
 
         return () => {
             unprepareWindow(title);
