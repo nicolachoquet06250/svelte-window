@@ -9,12 +9,17 @@
 
 <main>
   {#each windows as window}
-    {@const {content, ..._window} = window}
+    {@const {content, specificWindow = null, ..._window} = window}
 
-    <Window {..._window}>
+    {#if specificWindow}
       <svelte:component 
-        this={content} />
-    </Window>
+        this={specificWindow} />
+    {:else}
+      <Window {..._window}>
+        <svelte:component 
+          this={content} />
+      </Window>
+    {/if}
   {/each}
 </main>
 
@@ -26,6 +31,7 @@
     import TaskBar from "./@components/TaskBar.svelte";
     import Window from "./lib/@components/window/WindowWrapper.svelte";
     import MacOsHeader from "./@components/headers/MacOsHeader.svelte";
+  import Application1 from "./@components/applications/Application1.svelte";
 
     const logo = '/vite.svg';
 
@@ -100,6 +106,9 @@
           header: MacOsHeader,
           tidy: DefaultTidyWindow
         }
+      },
+      {
+        specificWindow: Application1
       }
     ];
 </script>

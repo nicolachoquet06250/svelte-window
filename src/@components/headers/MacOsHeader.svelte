@@ -17,7 +17,7 @@
                 on:click={handleTidy} />
     </div>
 
-    <span>
+    <span class:long={title.length >= 30}>
         {title}
     </span>
 </header>
@@ -107,6 +107,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         text-align: center;
+    }
+
+    header > span:not(.long) {
+        margin-left: -65px;
     }
 
     header > .actions {
