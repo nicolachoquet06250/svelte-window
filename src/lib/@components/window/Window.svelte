@@ -201,6 +201,9 @@
         border-color: var(--border-color);
         border-width: var(--border-size);
         background-color: var(--bg-color);
+
+        -webkit-box-shadow: 3px 2px 12px 1px rgba(0,0,0,0.87); 
+        box-shadow: 3px 2px 12px 1px rgba(0,0,0,0.87);
     }
 
     section.window.tidy {
