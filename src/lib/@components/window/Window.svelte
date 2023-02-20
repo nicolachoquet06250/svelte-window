@@ -148,6 +148,33 @@
     type HeaderEvents = {};
 
     export type HeaderComponent = SvelteComponentTyped<HeaderProps, HeaderEvents, {}>;
+
+    export type WindowProps = Partial<{
+        rounded: boolean,
+        title: string,
+        width: number,
+        height: number,
+        positionX: number,
+        positionY: number,
+        minWidth: number,
+        minHeight: number,
+        windowWidth: number,
+        windowHeight: number,
+        logo: string,
+        header: ConstructorOfATypedSvelteComponent,
+        tidy: ConstructorOfATypedSvelteComponent
+    }>;
+
+    export type WindowCssVars = Partial<
+        Record<
+            '--bg-color' | 
+            '--border-color' | 
+            '--border-size' | 
+            '--title-color' | 
+            '--window-position', 
+            string
+        >
+    >;
 </script>
 
 <style scoped>
@@ -159,7 +186,6 @@
         --title-color: black;
 
         --window-position: absolute;
-        --z-index: 0;
     }
 
     section.window {
@@ -169,6 +195,7 @@
         border-style: solid;
         box-sizing: border-box;
         position: var(--window-position);
+        z-index: 0;
         z-index: var(--z-index);
 
         border-color: var(--border-color);

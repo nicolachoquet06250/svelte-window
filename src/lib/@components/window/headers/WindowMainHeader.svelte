@@ -9,24 +9,28 @@
 
     <div class:actions>
         <button class:tidy 
+                class:rounded
                 disabled={!stowable}
                 on:click={handleTidy}> 
             - 
         </button>
 
         {#if maxified}
-            <button class:minify>
+            <button class:minify
+                    class:rounded>
                 <i class="fa-solid fa-window-restore"/>
             </button>
         {:else}
             <button class:maxify 
+                    class:rounded
                     disabled={!resizable} 
                     on:click={handleMaxify}> 
                 □ 
             </button>
         {/if}
 
-        <button class:close>
+        <button class:close
+                class:rounded>
             x
         </button>
     </div>
@@ -58,7 +62,6 @@
     export let title: string;
     export let maxified: boolean;
     export let rounded = false;
-
     export let stowable = true;
     export let resizable = true;
     export let cursor: CSSCursor = 'default';
@@ -77,7 +80,7 @@
     useEventListener(element, 'mousedown', () => focus(title));
 
     const handleMaxify = () => 
-        fullscreenContext.set(!get(fullscreenContext));
+        ($fullscreenContext = !$fullscreenContext);
 
     const handleTidy = () => dispatch('tidy');
 
@@ -152,6 +155,10 @@
         transition: 
             color .2s ease-out,
             background-color .2s ease-out;
+    }
+
+    header > .actions > button.rounded {
+        border-radius: 5px;
     }
 
     header > .actions > button:disabled {
