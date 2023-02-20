@@ -19,9 +19,7 @@
     $: logo = current.data.logo;
 
     const target = writable<HTMLDivElement>();
-    useEventListener(target, 'click', () => {
-        dispatch('upset');
-    });
+    useEventListener(target, 'click', () => dispatch('upset'));
 </script>
 
 <style scoped>

@@ -6,8 +6,8 @@
 {/each}
 
 <script lang='ts'>
-    import type { AvailableSide } from "./WindowResizer.svelte";
     import Resizer from "./WindowResizer.svelte";
+    import type { AvailableSide } from "./WindowResizer.svelte";
 
     export let resizers: AvailableSide[] = [];
 </script>

@@ -10,7 +10,5 @@
 
     const { list, upset } = useTidyWindows();
 
-    const handleUpset = (id: string) => () => {
-        upset(id);
-    };
+    const handleUpset = (id: string) => () => upset(id);
 </script>

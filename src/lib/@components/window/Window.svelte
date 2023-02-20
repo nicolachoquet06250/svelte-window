@@ -24,7 +24,7 @@
             {headerHeight}
             {maxified} {title}
             {rounded} {stowable}
-            {resizable} {logo}
+            resizable={$resizableContext} {logo}
             on:tidy={handleTidy} />
     {/if}
     
@@ -34,44 +34,40 @@
 </section>
 
 <script lang='ts'>
-    import { getContext, onMount, SvelteComponentTyped } from "svelte";
-    import type { 
-        MovableZoneElementContext, 
-        MovableContext, 
-        MovableZoneElement, 
-        PositionContext, 
-        Point 
-    } from "./Movable.svelte";
-    import type { ResizableContext, WindowSizeContext } from "./resizer/Resizable.svelte";
+    import { onMount, SvelteComponentTyped } from "svelte";
     import defaultLogo from '../../../assets/svelte.svg';
-    import { get, type Writable } from "svelte/store";
     import { useEventListener, writable } from "@svelte-use/core";
-    import { useFocus, useTidyWindows } from "../../@composables";
+    import { useFocus, useTidyWindows, getContext, useContext } from "../../@composables";
     import WindowMainHeader from "./headers/WindowMainHeader.svelte";
+    import type { MovableZoneElement, Point } from "./Movable.svelte";
+    import type { BoxSize } from "./resizer/Resizable.svelte";
 
-    const movableContext = getContext<MovableContext>('movable');
-    const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
-    const windowPositionContext = getContext<PositionContext>('window-position');
+    const movableContext = useContext<boolean>('movable', false);
+    const movableZoneElementContext = 
+        getContext<MovableZoneElement>(
+            'movable-zone-element'
+        );
+    const windowPositionContext = getContext<Point>('window-position');
+    const resizableContext = useContext<boolean>('resizable', false);
+    const windowSizeContext = getContext<BoxSize>('window-size');
+    const minSizeContext = getContext<BoxSize>('min-size');
+    const titleContext = getContext<string>('title');
 
-    const resizableContext = getContext<ResizableContext>('resizable');
-    const windowSizeContext = getContext<WindowSizeContext>('window-size');
-    const minSizeContext = getContext<WindowSizeContext>('min-size');
-
-    const titleContext = getContext<Writable<string>>('title');
-
-    const { focus, prepareWindow, unprepareWindow, list: windowList } = useFocus();
+    const { list: tidyWindowList, tidy: tidyWindow } = useTidyWindows();
+    const { 
+        focus, prepareWindow, 
+        unprepareWindow, list: windowList
+    } = useFocus();
     
     const target = writable<HTMLElement>();
-    useEventListener(target, 'click', () => {
-        focus(title);
-    });
+    useEventListener(target, 'click', () => focus(title));
 
     onMount(() => {
-        minSizeContext?.set({
+        $minSizeContext && ($minSizeContext = {
             width: 500,
             height: 500
         });
-        titleContext?.set(title);
+        $titleContext = title;
         
         prepareWindow(title);
 
@@ -103,69 +99,51 @@
     
     let maxified = false;
     let headerHeight: number;
-    let resizable: boolean = false;
-    let isMovable: boolean = false;
-    let headerElement: MovableZoneElement = {
-        component: null,
-        element: null
-    };
     let windowPosition: Point = { x: 0, y: 0 };
 
     $: stowable = tidy !== null;
 
-    $: _width = resizable ? '100%' : (width ?? 0) + 'px';
-    $: _height = resizable ? '100%' : (height ?? 0) + 'px';
+    $: _width = $resizableContext ? '100%' : (width ?? 0) + 'px';
+    $: _height = $resizableContext ? '100%' : (height ?? 0) + 'px';
 
-    $: _minWidth = resizable ? null : (minWidth ?? 0) + 'px';
-    $: _minHeight = resizable ?  null : (minHeight ?? 0) + 'px';
+    $: _minWidth = $resizableContext ? null : (minWidth ?? 0) + 'px';
+    $: _minHeight = $resizableContext ?  null : (minHeight ?? 0) + 'px';
 
-    $: windowPosition.x = isMovable ? 0 : positionX;
-    $: windowPosition.y = isMovable ? 0 : positionY;
+    $: windowPosition.x = $movableContext ? 0 : positionX;
+    $: windowPosition.y = $movableContext ? 0 : positionY;
 
-    $: windowPositionCss = resizable ? 'relative' : 'absolute';
+    $: windowPositionCss = $resizableContext ? 'relative' : 'absolute';
 
-    resizableContext?.subscribe(v => (resizable = v));
-    movableContext?.subscribe(v => (isMovable = v));
     windowPositionContext?.subscribe(v => {
-        !resizable && (windowPosition.x = v.x);
-        !resizable && (windowPosition.y = v.y);
-    });
-    movableZoneElementContext?.subscribe(v => {
-        v.component && v.element && (() => {
-            headerElement.component = v.component;
-            headerElement.element = v.element;
-        })();
+        !$resizableContext && (windowPosition.x = v.x);
+        !$resizableContext && (windowPosition.y = v.y);
     });
 
-    $: resizable && windowSizeContext.update(v => ({...v, width: windowWidth}));
-    $: resizable && windowSizeContext.update(v => ({...v, height: windowHeight}));
+    $: $resizableContext && windowSizeContext.update(v => ({...v, width: windowWidth}));
+    $: $resizableContext && windowSizeContext.update(v => ({...v, height: windowHeight}));
 
-    $: positionX && isMovable && windowPositionContext.update(v => ({ ...v, x: positionX }));
-    $: positionY && isMovable && windowPositionContext.update(v => ({ ...v, y: positionY }));
+    $: positionX && $movableContext && windowPositionContext.update(v => ({ ...v, x: positionX }));
+    $: positionY && $movableContext && windowPositionContext.update(v => ({ ...v, y: positionY }));
 
-    $: headerElement.element && movableZoneElementContext?.set({...get(movableZoneElementContext), element: headerElement.element});
+    $: $movableZoneElementContext.element && ($movableZoneElementContext = {
+        ...$movableZoneElementContext,
+        element: $movableZoneElementContext.element
+    });
+
+    const handleTidy = () => tidyWindow(tidy, { title, logo });
 
     $readonly: windowWidth;
     $readonly: windowHeight;
-
-    const { list: tidyWindowList, tidy: tidyWindow } = useTidyWindows();
-
-    const handleTidy = () => {
-        tidyWindow(tidy, {
-            title,
-            logo
-        });
-    };
 </script>
 
 <script lang='ts' context='module'>
     type HeaderProps = {
         headerHeight: number,
         maxified: boolean,
+        resizable: boolean,
+        stowable: boolean,
         title: string,
         logo: string,
-        resizable: boolean,
-        stowable: boolean
     };
     type HeaderEvents = {};
 

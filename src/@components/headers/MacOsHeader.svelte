@@ -1,5 +1,5 @@
 <header bind:offsetHeight={headerHeight}
-        bind:this={ref}
+        bind:this={element}
         style:cursor class:rounded>
     <div class:actions>
         <button class:close />
@@ -23,14 +23,21 @@
 </header>
 
 <script lang='ts'>
-    import { createEventDispatcher, getContext } from "svelte";
+    import { createEventDispatcher } from "svelte";
     import { get_current_component, onMount } from "svelte/internal";
     import { get } from "svelte/store";
+    import { getContext } from "../../lib/@composables";
     import type { CSSCursor } from "../../lib/@tools/cursors";
-    import type { MovableZoneElementContext } from "../../lib/@components/window/Movable.svelte";
-    import type { FullscreenContext } from "../../lib/@components/window/resizer/Resizable.svelte";
+    import type { MovableZoneElement } from "../../lib/@components/window/Movable.svelte";
+
+    const actions = true, 
+          tidy = true, 
+          minify = true, 
+          maxify = true, 
+          close = true;
 
     const dispatch = createEventDispatcher();
+    const component = get_current_component();
 
     export let headerHeight: number;
     export let title: string;
@@ -41,38 +48,23 @@
     export let resizable = true;
     export let cursor: CSSCursor = 'default';
 
-    let ref: HTMLElement = null;
-
-    $readonly: headerHeight;
+    let element: HTMLElement = null;
     
-    const movableZoneElementContext = getContext<
-        MovableZoneElementContext
-    >('movable-zone-element');
-    const fullscreenContext = getContext<
-        FullscreenContext
-    >('fullscreen');
+    const movableZoneElementContext = getContext<MovableZoneElement>(
+        'movable-zone-element'
+    );
+    const fullscreenContext = getContext<boolean>('fullscreen');
 
     const handleMaxify = () => 
         fullscreenContext.set(!get(fullscreenContext));
 
-    const self = get_current_component();
+    const handleTidy = () => dispatch('tidy');
+
+    $readonly: headerHeight;
 
     onMount(() => {
-        movableZoneElementContext?.set({
-            element: ref,
-            component: self
-        });
+        $movableZoneElementContext = { element, component };
     });
-
-    const actions = true, 
-          tidy = true, 
-          minify = true, 
-          maxify = true, 
-          close = true;
-
-    const handleTidy = () => {
-        dispatch('tidy');
-    }
 </script>
 
 <style scoped>

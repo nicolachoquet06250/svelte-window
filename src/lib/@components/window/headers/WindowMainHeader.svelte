@@ -1,5 +1,5 @@
 <header bind:offsetHeight={headerHeight}
-        bind:this={ref}
+        bind:this={element}
         style:cursor class:rounded>
     <img src={logo} alt='logo' />
 
@@ -34,15 +34,24 @@
 
 <script lang='ts'>
     import { useEventListener } from "@svelte-use/core";
-    import { createEventDispatcher, getContext } from "svelte";
+    import { createEventDispatcher } from "svelte";
     import { get_current_component, onMount } from "svelte/internal";
     import { get } from "svelte/store";
-    import { useFocus } from "../../../@composables";
+    import { useFocus, getContext } from "../../../@composables";
     import type { CSSCursor } from "../../../@tools/cursors";
-    import type { MovableZoneElementContext } from "../Movable.svelte";
-    import type { FullscreenContext } from "../resizer/Resizable.svelte";
+    import type { MovableZoneElement } from "../Movable.svelte";
+
+    const actions = true, 
+          tidy = true, 
+          minify = true, 
+          maxify = true, 
+          close = true;
+
+    const { focus } = useFocus();
 
     const dispatch = createEventDispatcher();
+
+    const component = get_current_component();
 
     export let headerHeight: number;
     export let logo: string;
@@ -54,44 +63,25 @@
     export let resizable = true;
     export let cursor: CSSCursor = 'default';
 
-    let ref: HTMLElement = null;
-
-    $readonly: headerHeight;
+    let element: HTMLElement = null;
     
     const movableZoneElementContext = getContext<
-        MovableZoneElementContext
+        MovableZoneElement
     >('movable-zone-element');
-    const fullscreenContext = getContext<
-        FullscreenContext
-    >('fullscreen');
+    const fullscreenContext = getContext<boolean>('fullscreen');
+
+    onMount(() => {
+        $movableZoneElementContext = { element, component };
+    });
+
+    useEventListener(element, 'mousedown', () => focus(title));
 
     const handleMaxify = () => 
         fullscreenContext.set(!get(fullscreenContext));
 
-    const self = get_current_component();
+    const handleTidy = () => dispatch('tidy');
 
-    const { focus } = useFocus();
-
-    onMount(() => {
-        movableZoneElementContext?.set({
-            element: ref,
-            component: self
-        });
-    });
-
-    useEventListener(ref, 'mousedown', () => {
-        focus(title);
-    });
-
-    const handleTidy = () => {
-        dispatch('tidy');
-    }
-
-    const actions = true, 
-          tidy = true, 
-          minify = true, 
-          maxify = true, 
-          close = true;
+    $readonly: headerHeight;
 </script>
 
 <style scoped>

@@ -1,16 +1,16 @@
 <div class:resizable={true}
-     class:fullscreen
+     class:fullscreen={$fullscreenContext}
      class:tidy={Object.values($tidyWindowList).map(v => v.data.title).includes($titleContext)}
 
      style:--z-index={$windowList.indexOf($titleContext)}
 
-     style:min-width={minWidth + 'px'}
-     style:min-height={minHeight + 'px'}
+     style:min-width={$minSizeContext.width + 'px'}
+     style:min-height={$minSizeContext.height + 'px'}
 
      style:width style:height
 
-     style:--position-x={windowPosition.x + 'px'}
-     style:--position-y={windowPosition.y + 'px'}>
+     style:--position-x={$windowPositionContext.x + 'px'}
+     style:--position-y={$windowPositionContext.y + 'px'}>
     <slot />
 
     <ResizerGroup 
@@ -22,14 +22,11 @@
 <svelte:body on:mousedown={handleUnclicked} />
 
 <script lang='ts'>
-    import { getContext, hasContext, onMount, setContext } from "svelte";
-    import { get, writable } from "svelte/store";
-    import type { Writable } from "svelte/store";
-    import type { ClickedEvent, ResizeEvent } from "./WindowResizer.svelte";
-    import type { AvailableSide } from "./WindowResizer.svelte";
+    import { onMount } from "svelte";
     import ResizerGroup from "./WindowResizerGroup.svelte";
-    import type { MovableZoneElement, MovableZoneElementContext, Point, PositionContext } from "../Movable.svelte";
-    import { useFocus, useTidyWindows } from "../../../@composables";
+    import { useFocus, useTidyWindows, useContext } from "../../../@composables";
+    import type { Point } from "../Movable.svelte";
+    import type { ClickedEvent, ResizeEvent, AvailableSide } from "./WindowResizer.svelte";
 
     const { list: tidyWindowList } = useTidyWindows();
     const { list: windowList } = useFocus();
@@ -41,49 +38,33 @@
         'bottom'
     ];
 
-    let minWidth: number;
-    let minHeight: number;
     let resizeTo: AvailableSide = null;
-    let size = { width: 0, height: 0 };
-    let tmpSize = { width: 0, height: 0 };
-    let windowPosition: Point = { x: 0, y: 0 };
+    let size: BoxSize = { width: 0, height: 0 };
+    let tmpSize: BoxSize = { width: 0, height: 0 };
     let clickPosition: Point = { x: 0, y: 0 };
     let clickedSize: Partial<BoxSize> = {};
 
-    let zoneElement: MovableZoneElement = {
+    // set des contextes
+    useContext('resizable', true);
+    const titleContext = useContext('title', '');
+    const fullscreenContext = useContext('fullscreen', false);
+    const inMoveContext = useContext('in-move', false);
+    const minSizeContext = useContext('min-size', {
+        width: 0,
+        height: 0
+    });
+    const windowSizeContext = useContext('window-size', {
+        width: 0,
+        height: 0
+    });
+    const windowPositionContext = useContext('window-position', { 
+        x: 0, 
+        y: 0 
+    });
+    const movableZoneElementContext = useContext('movable-zone-element', { 
         component: null,
         element: null
-    };
-    let fullscreen: boolean = false;
-
-    // set des contextes
-    setContext('resizable', writable(true));
-    const titleContext = hasContext('title') ? 
-        getContext<Writable<string>>('title') : 
-            setContext<Writable<string>>('title', writable(''));
-    const fullscreenContext = hasContext('fullscreen') ? 
-        getContext<FullscreenContext>('fullscreen') : 
-            setContext('fullscreen', writable(false));
-    const minSizeContext = setContext('min-size', writable({
-        width: 0,
-        height: 0
-    }));
-    const windowSizeContext = setContext('window-size', writable({
-        width: 0,
-        height: 0
-    }));
-    const windowPositionContext = hasContext('window-position') ? 
-        getContext<PositionContext>('window-position') : 
-            setContext<PositionContext>('window-position', writable({ x: 0, y: 0 }));
-    const movableZoneElementContext = hasContext('movable-zone-element') ? 
-        getContext<MovableZoneElementContext>('movable-zone-element') : 
-            setContext<MovableZoneElementContext>(
-                'movable-zone-element', 
-                writable({ component: null, element: null })
-            );
-    const inMoveContext = hasContext('in-move') ? 
-        getContext<Writable<boolean>>('in-move') : 
-            setContext<Writable<boolean>>('in-move', writable(false));
+    });
 
     let savedSize = {
         width: 0,
@@ -92,7 +73,7 @@
 
     // computed & subscribes
     $: width = (() => {
-        if (fullscreen) {
+        if ($fullscreenContext) {
             savedSize = { ...savedSize, width: size.width };
             return 'auto';
         }
@@ -101,7 +82,7 @@
         return r;
     })();
     $: height = (() => {
-        if (fullscreen) {
+        if ($fullscreenContext) {
             savedSize = { ...savedSize, height: size.height }
             return 'auto';
         }
@@ -133,18 +114,6 @@
         })();
     });
 
-    minSizeContext?.subscribe(v => {
-        minWidth = v.width;
-        minHeight = v.height;
-    });
-
-    windowPositionContext?.subscribe(v => (windowPosition = v));
-
-    movableZoneElementContext.subscribe(v => {
-        v?.component && (zoneElement.component = v.component);
-        v?.element && (zoneElement.element = v.element);
-    });
-
     $: handleClicked = (e: ClickedEvent) => {
         if (!$inMoveContext) {
             resizeTo = e.detail.side;
@@ -167,17 +136,17 @@
             e.preventDefault();
             e.stopPropagation();
 
-            if (fullscreen) return;
+            if ($fullscreenContext) return;
 
             e.detail.side === 'bottom' && (() => {
-                const height = e.detail.size.height - windowPosition.y < minHeight ? 
-                    tmpSize.height : e.detail.size.height - windowPosition.y;
+                const height = e.detail.size.height - $windowPositionContext.y < $minSizeContext.height ? 
+                    tmpSize.height : e.detail.size.height - $windowPositionContext.y;
 
                 tmpSize = {...tmpSize, height};
             })();
             e.detail.side === 'right' && (() => {
-                const width = e.detail.size.width - windowPosition.x < minWidth ?
-                    tmpSize.width : e.detail.size.width - windowPosition.x;
+                const width = e.detail.size.width - $windowPositionContext.x < $minSizeContext.width ?
+                    tmpSize.width : e.detail.size.width - $windowPositionContext.x;
                 
                 tmpSize = {...tmpSize, width};
             })();
@@ -185,14 +154,14 @@
             e.detail.side === 'top' && (() => {
                 const topDiff = (clickPosition.y - e.detail.e.pageY);
 
-                const height = clickedSize.height + topDiff < minHeight ? 
-                    minHeight : clickedSize.height + topDiff;
+                const height = clickedSize.height + topDiff < $minSizeContext.height ? 
+                $minSizeContext.height : clickedSize.height + topDiff;
                 
-                if (height > minHeight) {
-                    windowPositionContext.set({
-                        ...windowPosition,
-                        y: windowPosition.y + (e.detail.size.height - windowPosition.y)
-                    });
+                if (height > $minSizeContext.height) {
+                    $windowPositionContext = {
+                        ...$windowPositionContext,
+                        y: $windowPositionContext.y + (e.detail.size.height - $windowPositionContext.y)
+                    }
                 }
                 
                 tmpSize = {...tmpSize, height};
@@ -201,14 +170,14 @@
             e.detail.side === 'left' && (() => {
                 const topDiff = (clickPosition.x - e.detail.e.pageX);
 
-                const width = clickedSize.width + topDiff < minWidth ? 
-                    minWidth : clickedSize.width + topDiff;
+                const width = clickedSize.width + topDiff < $minSizeContext.width ? 
+                $minSizeContext.width : clickedSize.width + topDiff;
                 
-                if (width > minWidth) {
-                    windowPositionContext.set({
-                        ...windowPosition,
-                        x: windowPosition.x + (e.detail.size.width - windowPosition.x)
-                    });
+                if (width > $minSizeContext.width) {
+                    $windowPositionContext = {
+                        ...$windowPositionContext,
+                        x: $windowPositionContext.x + (e.detail.size.width - $windowPositionContext.x)
+                    }
                 }
                 
                 tmpSize = {...tmpSize, width};
@@ -217,26 +186,21 @@
     };
 
     $: handleDblClick = () => {
-        fullscreenContext.set(!get(fullscreenContext));
+        $fullscreenContext = !$fullscreenContext;
     };
-    
-    fullscreenContext.subscribe(v => (fullscreen = v));
 
     onMount(() => {
-        zoneElement.element.addEventListener('dblclick', handleDblClick);
+        $movableZoneElementContext.element?.addEventListener('dblclick', handleDblClick);
 
         return () => {
             document.body.style.cursor = 'default';
-            zoneElement.element?.removeEventListener('dblclick', handleDblClick);
+            $movableZoneElementContext.element?.removeEventListener('dblclick', handleDblClick);
         }
     });
 </script>
 
 <script lang='ts' context='module'>
-    export type ResizableContext = Writable<boolean> | undefined;
     export type BoxSize = { width: number, height: number };
-    export type WindowSizeContext = Writable<BoxSize>;
-    export type FullscreenContext = Writable<boolean>;
 </script>
 
 <style scoped>
