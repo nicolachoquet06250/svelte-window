@@ -45,9 +45,8 @@
     import type { ResizableContext, WindowSizeContext } from "./resizer/Resizable.svelte";
     import logo from '../../../assets/svelte.svg';
     import { get, type Writable } from "svelte/store";
-    import { windowList } from "../../@tools/window-list";
     import { useEventListener, writable } from "@svelte-use/core";
-    import { useTidyWindows } from "../../@composables";
+    import { useFocus, useTidyWindows } from "../../@composables";
 
     const movableContext = getContext<MovableContext>('movable');
     const movableZoneElementContext = getContext<MovableZoneElementContext>('movable-zone-element');
@@ -58,31 +57,12 @@
     const minSizeContext = getContext<WindowSizeContext>('min-size');
 
     const titleContext = getContext<Writable<string>>('title');
+
+    const { focus, prepareWindow, unprepareWindow, list: windowList } = useFocus();
     
     const target = writable<HTMLElement>();
     useEventListener(target, 'click', () => {
-        const oldWindowList = [ ...$windowList ];
-        const newWindowList = [];
-
-        const currentIndex = $windowList.indexOf(title);
-        const nextCurrentIndex = Array.from(
-            oldWindowList.keys()
-        ).reduce((r, c) => c > r ? c : r, 0);
-
-        // avant l'index à bouger
-        for (let i = 0; i <= currentIndex - 1; i++) {
-            newWindowList.push(oldWindowList[i]);
-        }
-
-        // apres l'index à bouger
-        for (let i = currentIndex + 1; i <= nextCurrentIndex; i++) {
-            newWindowList.push(oldWindowList[i]);
-        }
-
-        // l'index à bouger
-        newWindowList.push(title);
-
-        $windowList = newWindowList;
+        focus(title);
     });
 
     onMount(() => {
@@ -93,12 +73,11 @@
         titleContext?.set(title);
         
         setTimeout(() => {
-            $windowList = [...$windowList, title];
+            prepareWindow(title);
         }, 0);
 
         return () => {
-            $windowList = $windowList
-                .filter(v => v !== title);
+            unprepareWindow(title);
         }
     });
 
@@ -156,7 +135,6 @@
             headerElement.element = v.element;
         })();
     });
-    windowList.subscribe(v => v.indexOf(title))
 
     $: resizable && windowSizeContext.update(v => ({...v, width: windowWidth}));
     $: resizable && windowSizeContext.update(v => ({...v, height: windowHeight}));

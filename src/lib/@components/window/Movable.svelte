@@ -11,6 +11,7 @@
     import type { Writable } from "svelte/store";
     import type { CSSCursor } from "../../@tools/cursors";
     import type { FullscreenContext } from "./resizer/Resizable.svelte";
+    import { useFocus } from "../../@composables";
 
     let zoneElement: MovableZoneElement = {
         component: null,
@@ -34,6 +35,12 @@
                 writable({ component: null, element: null })
             );
     const fullscreenContext = getContext<FullscreenContext>('fullscreen');
+    const inMoveContext = hasContext('in-move') ? 
+        getContext<Writable<boolean>>('in-move') : 
+            setContext<Writable<boolean>>('in-move', writable(false));
+    const titleContext = hasContext('title') ? 
+        getContext<Writable<string>>('title') : 
+            setContext<Writable<string>>('title', writable(''));
     
     windowPositionContext.subscribe(v => {
         if (v.y >= 0) {
@@ -58,6 +65,8 @@
         }
     });
 
+    const { focus } = useFocus();
+
     const handleMouseDown = (e: MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
@@ -73,6 +82,9 @@
                 ...(zoneElement?.component.$$prop_def ?? {}),
                 cursor: 'move' as CSSCursor
             });
+            $inMoveContext = true;
+
+            focus($titleContext);
         }
     };
 
@@ -87,10 +99,14 @@
             ...(zoneElement?.component.$$prop_def ?? {}),
             cursor: 'default' as CSSCursor
         });
+        $inMoveContext = false;
     };
 
     const handleMouseMove = (e: MouseEvent) => {
         if (inMove && !fullscreen) {
+            e.preventDefault();
+            e.stopPropagation();
+
             if (windowPosition.x + (e.clientX - oldMousePosition.x) >= 0) {
                 windowPosition.x += e.clientX - oldMousePosition.x;
             }

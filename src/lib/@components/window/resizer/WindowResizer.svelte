@@ -43,6 +43,9 @@
 
     $: handleMouseMove = (e: MouseEvent) => {
         side !== null && (() => {
+            e.preventDefault();
+            e.stopPropagation();
+
             (['top', 'bottom'].includes(side, 0)) && clicked && 
                 dispatch('resize', {
                     size: { height: e.y }, 

@@ -1,5 +1,4 @@
-<div bind:this={$target}
-     class:resizable={true}
+<div class:resizable={true}
      class:fullscreen
      class:tidy={Object.values($tidyWindowList).map(v => v.data.title).includes($titleContext)}
 
@@ -15,7 +14,7 @@
     <slot />
 
     <ResizerGroup 
-        resizers={['left', 'right', 'top', 'bottom']}
+        {resizers}
         on:clicked={handleClicked}
         on:resize={handleResize} />
 </div>
@@ -30,9 +29,14 @@
     import type { AvailableSide } from "./WindowResizer.svelte";
     import ResizerGroup from "./WindowResizerGroup.svelte";
     import type { MovableZoneElement, MovableZoneElementContext, Point, PositionContext } from "../Movable.svelte";
-    import { writable as clickOutsideWritable, onClickOutside, useEventListener } from '@svelte-use/core'
-    import { windowList } from "../../../@tools/window-list";
-  import { useTidyWindows } from "../../../@composables";
+    import { useFocus, useTidyWindows } from "../../../@composables";
+
+    const resizers: AvailableSide[] = [
+        'left', 
+        'right', 
+        'top', 
+        'bottom'
+    ];
 
     let minWidth: number;
     let minHeight: number;
@@ -51,7 +55,9 @@
 
     // set des contextes
     setContext('resizable', writable(true));
-    const titleContext = setContext('title', writable(''));
+    const titleContext = hasContext('title') ? 
+        getContext<Writable<string>>('title') : 
+            setContext<Writable<string>>('title', writable(''));
     const fullscreenContext = setContext('fullscreen', writable(false));
     const minSizeContext = setContext('min-size', writable({
         width: 0,
@@ -70,6 +76,9 @@
                 'movable-zone-element', 
                 writable({ component: null, element: null })
             );
+    const inMoveContext = hasContext('in-move') ? 
+        getContext<Writable<boolean>>('in-move') : 
+            setContext<Writable<boolean>>('in-move', writable(false));
 
     let savedSize = {
         width: 0,
@@ -132,12 +141,14 @@
     });
 
     $: handleClicked = (e: ClickedEvent) => {
-        resizeTo = e.detail.side;
-        clickPosition = {
-            x: e.detail.e.pageX,
-            y: e.detail.e.pageY
-        };
-        clickedSize = {...size};
+        if (!$inMoveContext) {
+            resizeTo = e.detail.side;
+            clickPosition = {
+                x: e.detail.e.pageX,
+                y: e.detail.e.pageY
+            };
+            clickedSize = {...size};
+        }
     };
 
     $: handleUnclicked = () => {
@@ -147,55 +158,57 @@
     };
 
     $: handleResize = (e: ResizeEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+        if (!$inMoveContext) {
+            e.preventDefault();
+            e.stopPropagation();
 
-        if (fullscreen) return;
+            if (fullscreen) return;
 
-        e.detail.side === 'bottom' && (() => {
-            const height = e.detail.size.height - windowPosition.y < minHeight ? 
-                tmpSize.height : e.detail.size.height - windowPosition.y;
+            e.detail.side === 'bottom' && (() => {
+                const height = e.detail.size.height - windowPosition.y < minHeight ? 
+                    tmpSize.height : e.detail.size.height - windowPosition.y;
 
-            tmpSize = {...tmpSize, height};
-        })();
-        e.detail.side === 'right' && (() => {
-            const width = e.detail.size.width - windowPosition.x < minWidth ?
-                tmpSize.width : e.detail.size.width - windowPosition.x;
-            
-            tmpSize = {...tmpSize, width};
-        })();
+                tmpSize = {...tmpSize, height};
+            })();
+            e.detail.side === 'right' && (() => {
+                const width = e.detail.size.width - windowPosition.x < minWidth ?
+                    tmpSize.width : e.detail.size.width - windowPosition.x;
+                
+                tmpSize = {...tmpSize, width};
+            })();
 
-        e.detail.side === 'top' && (() => {
-            const topDiff = (clickPosition.y - e.detail.e.pageY);
+            e.detail.side === 'top' && (() => {
+                const topDiff = (clickPosition.y - e.detail.e.pageY);
 
-            const height = clickedSize.height + topDiff < minHeight ? 
-                minHeight : clickedSize.height + topDiff;
-            
-            if (height > minHeight) {
-                windowPositionContext.set({
-                    ...windowPosition,
-                    y: windowPosition.y + (e.detail.size.height - windowPosition.y)
-                });
-            }
-            
-            tmpSize = {...tmpSize, height};
-        })();
+                const height = clickedSize.height + topDiff < minHeight ? 
+                    minHeight : clickedSize.height + topDiff;
+                
+                if (height > minHeight) {
+                    windowPositionContext.set({
+                        ...windowPosition,
+                        y: windowPosition.y + (e.detail.size.height - windowPosition.y)
+                    });
+                }
+                
+                tmpSize = {...tmpSize, height};
+            })();
 
-        e.detail.side === 'left' && (() => {
-            const topDiff = (clickPosition.x - e.detail.e.pageX);
+            e.detail.side === 'left' && (() => {
+                const topDiff = (clickPosition.x - e.detail.e.pageX);
 
-            const width = clickedSize.width + topDiff < minWidth ? 
-                minWidth : clickedSize.width + topDiff;
-            
-            if (width > minWidth) {
-                windowPositionContext.set({
-                    ...windowPosition,
-                    x: windowPosition.x + (e.detail.size.width - windowPosition.x)
-                });
-            }
-            
-            tmpSize = {...tmpSize, width};
-        })();
+                const width = clickedSize.width + topDiff < minWidth ? 
+                    minWidth : clickedSize.width + topDiff;
+                
+                if (width > minWidth) {
+                    windowPositionContext.set({
+                        ...windowPosition,
+                        x: windowPosition.x + (e.detail.size.width - windowPosition.x)
+                    });
+                }
+                
+                tmpSize = {...tmpSize, width};
+            })();
+        }
     };
 
     $: handleDblClick = () => {
@@ -215,16 +228,8 @@
         }
     });
 
-    const target = clickOutsideWritable<HTMLDivElement>();
-    onClickOutside(target, () => {
-        // console.log('outside', $titleContext);
-    });
-
-    useEventListener(target, 'click', e => {
-        // console.log(e)
-    })
-
     const { list: tidyWindowList } = useTidyWindows();
+    const { list: windowList } = useFocus();
 </script>
 
 <script lang='ts' context='module'>
