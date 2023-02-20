@@ -17,9 +17,9 @@
                 on:click={handleTidy} />
     </div>
 
-    <span class:long={title.length >= 30}>
+    <div class:title={true} class:long={title.length >= 30}>
         {title}
-    </span>
+    </div>
 </header>
 
 <script lang='ts'>
@@ -99,9 +99,8 @@
         border-top-right-radius: 5px;
     }
 
-    header > span {
+    header > .title {
         color: var(--title-color);
-        display: inline-block;
         flex: 1;
         white-space: nowrap;
         overflow: hidden;
@@ -109,7 +108,7 @@
         text-align: center;
     }
 
-    header > span:not(.long) {
+    header > .title:not(.long) {
         margin-left: -65px;
     }
 
@@ -119,6 +118,7 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
+        z-index: 1;
     }
 
     header > .actions > button {
