@@ -1,18 +1,4 @@
 <main>
-  <!-- <Window 
-    --border-color='black'
-    --header-bg-color='lightgray'
-    --header-border-color='black'
-    --header-border-size='1px'
-    --title-color='black'
-
-    title='Mon application fixed'
-    width={600} height={600}
-    positionX={100} positionY={200}
-    Header={MainHeader}>
-    <DefaultWindowContent />
-  </Window> -->
-  
   <Movable>
     <Resizable>
         <Window 
@@ -25,7 +11,7 @@
           title='Mon application rounded & movable & resizable'
           width={600} height={600}
           positionX={0} positionY={0}
-          rounded={true} Header={MainHeader}>
+          rounded={true} header={MainHeader}>
           <DefaultWindowContent />
         </Window>
     </Resizable>
@@ -43,7 +29,9 @@
         title='Mon application rounded & movable & resizable reversed'
         width={600} height={600}
         positionX={0} positionY={500}
-        rounded={true} Header={MacOsHeader}>
+        rounded={true} 
+        header={MacOsHeader} 
+        tidy={DefaultTidyWindow}>
         <DefaultWindowContent />
       </Window>
     </Movable>
@@ -60,11 +48,13 @@
       title='Mon application movable'
       width={600} height={600}
       positionX={200} positionY={200}
-      Header={MainHeader}>
+      header={MainHeader}>
       <DefaultWindowContent />
     </Window>
   </Movable>
 </main>
+
+<TidyWindowsContainer />
 
 <svelte:head>
   <link rel="stylesheet" 
@@ -81,6 +71,7 @@
     import Window from "./lib/@components/window/Window.svelte";
     import MainHeader from "./lib/@components/window/headers/WindowMainHeader.svelte";
     import DefaultWindowContent from "./lib/@components/DefaultWindowContent.svelte";
-  import MacOsHeader from "./@components/headers/MacOsHeader.svelte";
-  import { SvelteComponent } from "svelte";
+    import MacOsHeader from "./@components/headers/MacOsHeader.svelte";
+    import DefaultTidyWindow from "./lib/@components/DefaultTidyWindow.svelte";
+    import TidyWindowsContainer from "./lib/@components/TidyWindowsContainer.svelte";
 </script>

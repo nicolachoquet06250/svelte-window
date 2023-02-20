@@ -1,6 +1,7 @@
 <div bind:this={$target}
      class:resizable={true}
      class:fullscreen
+     class:tidy={Object.values($tidyWindowList).map(v => v.data.title).includes($titleContext)}
 
      style:--z-index={$windowList.indexOf($titleContext)}
 
@@ -31,6 +32,7 @@
     import type { MovableZoneElement, MovableZoneElementContext, Point, PositionContext } from "../Movable.svelte";
     import { writable as clickOutsideWritable, onClickOutside, useEventListener } from '@svelte-use/core'
     import { windowList } from "../../../@tools/window-list";
+  import { useTidyWindows } from "../../../@composables";
 
     let minWidth: number;
     let minHeight: number;
@@ -221,6 +223,8 @@
     useEventListener(target, 'click', e => {
         // console.log(e)
     })
+
+    const { list: tidyWindowList } = useTidyWindows();
 </script>
 
 <script lang='ts' context='module'>
@@ -240,6 +244,10 @@
         position: absolute;
         top: var(--position-y);
         left: var(--position-x);
+    }
+
+    .resizable.tidy {
+        display: none;
     }
 
     .resizable.fullscreen {

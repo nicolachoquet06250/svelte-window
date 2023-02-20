@@ -8,7 +8,8 @@
     </span>
 
     <div class:actions>
-        <button class:tidy> 
+        <button class:tidy 
+                disabled={!stowable}> 
             - 
         </button>
 
@@ -44,6 +45,7 @@
     export let maxified: boolean;
     export let rounded = false;
 
+    export let stowable = true;
     export let resizable = true;
     export let cursor: CSSCursor = 'default';
 

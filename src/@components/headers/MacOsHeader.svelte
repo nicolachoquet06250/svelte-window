@@ -12,7 +12,9 @@
                     on:click={handleMaxify} />
         {/if}
 
-        <button class:tidy />
+        <button class:tidy
+                disabled={!stowable}
+                on:click={handleTidy} />
     </div>
 
     <span>
@@ -21,18 +23,21 @@
 </header>
 
 <script lang='ts'>
-    import { getContext } from "svelte";
+    import { createEventDispatcher, getContext } from "svelte";
     import { get_current_component, onMount } from "svelte/internal";
     import { get } from "svelte/store";
     import type { CSSCursor } from "../../lib/@tools/cursors";
     import type { MovableZoneElementContext } from "../../lib/@components/window/Movable.svelte";
     import type { FullscreenContext } from "../../lib/@components/window/resizer/Resizable.svelte";
 
+    const dispatch = createEventDispatcher();
+
     export let headerHeight: number;
     export let title: string;
     export let maxified: boolean;
     export let rounded = false;
 
+    export let stowable = true;
     export let resizable = true;
     export let cursor: CSSCursor = 'default';
 
@@ -57,13 +62,17 @@
             element: ref,
             component: self
         });
-    })
+    });
 
     const actions = true, 
           tidy = true, 
           minify = true, 
           maxify = true, 
           close = true;
+
+    const handleTidy = () => {
+        dispatch('tidy');
+    }
 </script>
 
 <style scoped>
@@ -91,6 +100,11 @@
         border-bottom-width: var(--header-border-size);
         border-bottom-color: var(--header-border-color);
         user-select: none;
+    }
+
+    header.rounded {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
     }
 
     header > span {
@@ -138,13 +152,9 @@
     }
 
     header > .actions > button:disabled {
-        background-color: rgba(255, 255, 255, .5);
-    }
-
-    header > .actions > button:disabled:hover {
-        background-color: rgba(255, 255, 255, .5);
-        border-color: black;
-        cursor: initial;
+        background-color: rgba(255, 255, 255, .5)!important;
+        border-color: rgba(255, 255, 255, .5)!important;
+        cursor: default;
     }
 
     header > .actions > button:first-of-type {
@@ -169,10 +179,5 @@
     header > .actions > button.tidy {
         background-color: #39EA49;
         border-color: #39EA49;
-    }
-
-    header.rounded {
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
     }
 </style>
