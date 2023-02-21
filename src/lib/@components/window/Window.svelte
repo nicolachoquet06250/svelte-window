@@ -38,7 +38,7 @@
     import defaultLogo from '../../../assets/svelte.svg';
     import { useEventListener, writable } from "@svelte-use/core";
     import { useFocus, useTidyWindows, getContext, useContext } from "../../@composables";
-    import WindowMainHeader from "./headers/WindowMainHeader.svelte";
+    import WindowMainHeader from "./WindowMainHeader.svelte";
     import type { MovableZoneElement, Point } from "./Movable.svelte";
     import type { BoxSize } from "./resizer/Resizable.svelte";
 
