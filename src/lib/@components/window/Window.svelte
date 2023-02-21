@@ -95,7 +95,9 @@
     export let header: ConstructorOfATypedSvelteComponent = WindowMainHeader;
     export let tidy: ConstructorOfATypedSvelteComponent = null;
 
-    export let logo = defaultLogo;
+    export let logo: string | ConstructorOfATypedSvelteComponent = defaultLogo;
+
+    export let focused: boolean = false;
     
     let maxified = false;
     let headerHeight: number;
@@ -113,6 +115,8 @@
     $: windowPosition.y = $movableContext ? 0 : positionY;
 
     $: windowPositionCss = $resizableContext ? 'relative' : 'absolute';
+
+    $: focused = $windowList.indexOf(title) === $windowList.length - 1;
 
     windowPositionContext?.subscribe(v => {
         !$resizableContext && (windowPosition.x = v.x);
@@ -134,6 +138,7 @@
 
     $readonly: windowWidth;
     $readonly: windowHeight;
+    $readonly: focused;
 </script>
 
 <script lang='ts' context='module'>
@@ -143,7 +148,7 @@
         resizable: boolean,
         stowable: boolean,
         title: string,
-        logo: string,
+        logo: string | ConstructorOfATypedSvelteComponent,
     };
     type HeaderEvents = {};
 
@@ -160,7 +165,7 @@
         minHeight: number,
         windowWidth: number,
         windowHeight: number,
-        logo: string,
+        logo: string | ConstructorOfATypedSvelteComponent,
         header: ConstructorOfATypedSvelteComponent,
         tidy: ConstructorOfATypedSvelteComponent
     }>;

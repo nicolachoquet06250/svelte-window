@@ -1,7 +1,11 @@
 <header bind:offsetHeight={headerHeight}
         bind:this={element}
         style:cursor class:rounded>
-    <img src={logo} alt='logo' />
+    {#if typeof logo === 'string'}
+        <img src={logo} alt='logo' />
+    {:else}
+        <svelte:component this={logo} />
+    {/if}
 
     <span>
         {title}
@@ -58,7 +62,7 @@
     const component = get_current_component();
 
     export let headerHeight: number;
-    export let logo: string;
+    export let logo: string | ConstructorOfATypedSvelteComponent;
     export let title: string;
     export let maxified: boolean;
     export let rounded = false;

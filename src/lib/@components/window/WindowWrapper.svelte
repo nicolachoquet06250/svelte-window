@@ -7,6 +7,7 @@
                 --header-border-color={style["--header-border-color"]}
                 --header-border-size={style["--header-border-size"]}
                 --title-color={style["--title-color"]}
+                bind:focused
                 {...data}>
                 <slot />
             </Window>
@@ -20,6 +21,7 @@
             --header-border-color={style["--header-border-color"]}
             --header-border-size={style["--header-border-size"]}
             --title-color={style["--title-color"]}
+            bind:focused
             {...data}>
             <slot />
         </Window>
@@ -32,6 +34,7 @@
             --header-border-color={style["--header-border-color"]}
             --header-border-size={style["--header-border-size"]}
             --title-color={style["--title-color"]}
+            bind:focused
             {...data}>
             <slot />
         </Window>
@@ -43,6 +46,7 @@
         --header-border-color={style["--header-border-color"]}
         --header-border-size={style["--header-border-size"]}
         --title-color={style["--title-color"]}
+        bind:focused
         {...data}>
         <slot />
     </Window>
@@ -57,4 +61,8 @@
     export let resizable = true;
     export let data: WindowProps = {};
     export let style: WindowCssVars = {};
+
+    export let focused: boolean = false;
+
+    $readonly: focused;
 </script>

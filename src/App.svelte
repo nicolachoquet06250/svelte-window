@@ -32,6 +32,7 @@
     import Window from "./lib/@components/window/WindowWrapper.svelte";
     import MacOsHeader from "./@components/headers/MacOsHeader.svelte";
   import Application1 from "./@components/applications/Application1.svelte";
+  import Terminal from "./@components/applications/Terminal/Terminal.svelte";
 
     const logo = '/vite.svg';
 
@@ -109,6 +110,9 @@
       },
       {
         specificWindow: Application1
-      }
+      },
+      {
+        specificWindow: Terminal
+      },
     ];
 </script>

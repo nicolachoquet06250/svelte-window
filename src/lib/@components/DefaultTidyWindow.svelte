@@ -1,6 +1,10 @@
 <div bind:this={$target}
      {title}>
-    <img src={logo} alt={title} />
+    {#if typeof logo === 'string'}
+        <img src={logo} alt={title} />
+    {:else}
+        <svelte:component this={logo} />
+    {/if}
     <span>{title}</span>
 </div>
 

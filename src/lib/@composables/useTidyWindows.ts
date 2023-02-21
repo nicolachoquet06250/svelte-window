@@ -6,7 +6,7 @@ const tidyWindowList = writable<
         component: ConstructorOfATypedSvelteComponent,
         data: Partial<{
             title: string,
-            logo: string
+            logo: string | ConstructorOfATypedSvelteComponent
         }>
     }>
 >({});
