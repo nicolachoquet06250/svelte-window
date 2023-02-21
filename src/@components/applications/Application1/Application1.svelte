@@ -9,10 +9,9 @@
 </WindowWrapper>
 
 <script lang="ts">
-    import DefaultTidyWindow from "../../lib/@components/DefaultTidyWindow.svelte";
-    import WindowWrapper from "../../lib/@components/window/WindowWrapper.svelte";
-    import MacOsHeader from "../headers/MacOsHeader.svelte";
-    import type { WindowProps } from "../../lib/@components/window/Window.svelte";
+    import { DefaultTidyWindow, WindowWrapper } from "../../../lib/@components";
+    import { MacOsHeader } from "../../headers";
+    import type { WindowProps } from "../../../lib/@components";
 
     const resizable = true;
     const movable = true;

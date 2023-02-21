@@ -3,7 +3,7 @@
 </div>
 
 <script lang="ts">
-    import TidyWindowsContainer from '../lib/@components/TidyWindowsContainer.svelte';
+    import { TidyWindowsContainer } from '../lib/@components';
     import { useFocus } from '../lib/@composables';
 
     const { list } = useFocus();

@@ -45,7 +45,7 @@
     import { createEventDispatcher } from "svelte";
     import { get_current_component, onMount } from "svelte/internal";
     import { useFocus, getContext } from "../../@composables";
-    import type { CSSCursor } from "../../@tools/cursors";
+    import type { CSSCursor } from "../../@tools";
     import type { MovableZoneElement } from "./Movable.svelte";
 
     const actions = true, 

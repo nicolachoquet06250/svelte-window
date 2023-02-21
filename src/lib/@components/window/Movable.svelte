@@ -8,7 +8,7 @@
 <script lang='ts'>
     import { onMount } from "svelte";
     import { useFocus, useContext } from "../../@composables";
-    import type { CSSCursor } from "../../@tools/cursors";
+    import type { CSSCursor } from "../../@tools";
 
     const { focus } = useFocus();
 

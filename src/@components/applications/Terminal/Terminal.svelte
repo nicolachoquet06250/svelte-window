@@ -9,9 +9,8 @@
 </WindowWrapper>
 
 <script lang="ts">
-    import DefaultTidyWindow from "../../../lib/@components/DefaultTidyWindow.svelte";
-    import WindowWrapper from "../../../lib/@components/window/WindowWrapper.svelte";
-    import type { WindowProps } from "../../../lib/@components/window/Window.svelte";
+    import { DefaultTidyWindow, WindowWrapper } from "../../../lib/@components";
+    import type { WindowProps } from "../../../lib/@components";
     import logo from "./Logo.svelte";
     import Cursor from "./Cursor.svelte";
     import DefaultPrompt from "./DefaultPrompt.svelte";

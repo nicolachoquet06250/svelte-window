@@ -54,7 +54,7 @@
 
 <script lang="ts">
     import Movable from "./Movable.svelte";
-    import Resizable from "./resizer/Resizable.svelte";
+    import { Resizable } from "./resizer";
     import Window, { type WindowCssVars, type WindowProps } from "./Window.svelte";
 
     export let movable = false;

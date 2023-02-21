@@ -26,13 +26,10 @@
 <TaskBar />
 
 <script lang="ts">
-    import DefaultWindowContent from "./lib/@components/DefaultWindowContent.svelte";
-    import DefaultTidyWindow from "./lib/@components/DefaultTidyWindow.svelte";
-    import TaskBar from "./@components/TaskBar.svelte";
-    import Window from "./lib/@components/window/WindowWrapper.svelte";
-    import MacOsHeader from "./@components/headers/MacOsHeader.svelte";
-  import Application1 from "./@components/applications/Application1.svelte";
-  import Terminal from "./@components/applications/Terminal/Terminal.svelte";
+    import { WindowWrapper as Window, DefaultWindowContent, DefaultTidyWindow } from "./lib/@components";
+    import { TaskBar } from "./@components";
+    import { MacOsHeader } from "./@components/headers";
+    import { Application1, Terminal } from "./@components/applications";
 
     const logo = '/vite.svg';
 

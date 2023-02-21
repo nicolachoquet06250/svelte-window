@@ -40,7 +40,7 @@
     import { useFocus, useTidyWindows, getContext, useContext } from "../../@composables";
     import WindowMainHeader from "./WindowMainHeader.svelte";
     import type { MovableZoneElement, Point } from "./Movable.svelte";
-    import type { BoxSize } from "./resizer/Resizable.svelte";
+    import type { BoxSize } from "./resizer";
 
     const movableContext = useContext<boolean>('movable', false);
     const movableZoneElementContext = 
