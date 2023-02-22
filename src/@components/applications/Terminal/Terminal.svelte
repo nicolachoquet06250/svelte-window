@@ -3,21 +3,25 @@
         <svelte:component 
             this={DefaultPrompt}
             color='black' />
-            <span>{@html command} </span>
+            <span>{@html $escapedCommand} </span>
             <Cursor color='black' {focused} />
     </div>
 </WindowWrapper>
 
 <script lang="ts">
     import { DefaultTidyWindow, WindowWrapper } from "../../../lib/@components";
-    import type { WindowProps } from "../../../lib/@components";
     import logo from "./Logo.svelte";
     import Cursor from "./Cursor.svelte";
     import DefaultPrompt from "./DefaultPrompt.svelte";
-    import { useEventListener } from "@svelte-use/core";
+    import { useWrite, WRITE_MODE } from "./composables";
+    import type { WindowProps } from "../../../lib/@components";
+
+    const { escapedCommand } = useWrite(WRITE_MODE.KEYBOARD, 'command');
 
     const resizable = true;
     const movable = true;
+
+    let focused: boolean;
 
     const style = {
         '--border-color': 'black',
@@ -35,22 +39,6 @@
         positionY: 400,
         logo
     };
-
-    let command = '';
-    let focused: boolean;
-
-    useEventListener('keypress', e => {
-        command += e.key === ' ' ? '&nbsp;' : e.key;
-    })
-
-    useEventListener('keydown', e => {
-        if (e.key === 'Backspace') {
-            command = command.substring(command.length - '&nbsp;'.length) === '&nbsp;' ? 
-                command.substring(0, command.length - '&nbsp;'.length) : 
-                    command.substring(0, command.length - 1);
-        }
-        console.log(e);
-    })
 </script>
 
 <style scoped>
