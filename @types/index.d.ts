@@ -1,3 +1,1 @@
-declare module '@svelte/window' {
-    
-}
+declare module '@svelte/window' {}
