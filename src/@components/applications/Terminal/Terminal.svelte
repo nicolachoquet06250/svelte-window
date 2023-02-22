@@ -15,13 +15,22 @@
     import DefaultPrompt from "./DefaultPrompt.svelte";
     import { useWrite, WRITE_MODE } from "./composables";
     import type { WindowProps } from "../../../lib/@components";
+  import { writable } from "svelte/store";
 
-    const { escapedCommand } = useWrite(WRITE_MODE.KEYBOARD, 'command');
+    const wFocused = writable(false);
+
+    const { escapedCommand } = useWrite(
+        WRITE_MODE.KEYBOARD, 
+        'command', 
+        wFocused
+    );
 
     const resizable = true;
     const movable = true;
 
     let focused: boolean;
+
+    $: $wFocused = focused;
 
     const style = {
         '--border-color': 'black',

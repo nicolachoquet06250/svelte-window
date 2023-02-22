@@ -1,5 +1,5 @@
 import { useEventListener } from "@svelte-use/core";
-import { derived, writable, type Readable, type Writable } from "svelte/store";
+import { derived, get, writable, type Readable, type Writable } from "svelte/store";
 
 export enum WRITE_MODE {
     KEYBOARD = 1,
@@ -27,19 +27,32 @@ type ReturnTypes<S extends string> = {
     [WRITE_MODE.PROGRAMATIC]: Store<S> & { set: SetFunc }
 };
 
-type ReturnType<T extends WRITE_MODE, S extends string> = ReturnTypes<S>[T];
-    // T extends WRITE_MODE.KEYBOARD ? 
-    //     Store<S> : (Store<S> & { set: SetFunc });
+type ReturnType<
+    T extends WRITE_MODE,
+    S extends string
+> = ReturnTypes<S>[T];
 
-type Return<T, S extends string> = T extends WRITE_MODE.KEYBOARD ? 
-    ReturnType<WRITE_MODE.KEYBOARD, S> : 
-        ReturnType<WRITE_MODE.PROGRAMATIC, S>
+type Return<T, S extends string> = 
+    T extends WRITE_MODE.KEYBOARD ? 
+        ReturnType<WRITE_MODE.KEYBOARD, S> : 
+            ReturnType<WRITE_MODE.PROGRAMATIC, S>
 
-export const useWrite = <T extends WRITE_MODE, C extends string>(
+const reset = (command: Writable<string>): ResetFunc => 
+    () => command.set('');
+const set = (command: Writable<string>): SetFunc => 
+    (s: string) => command.set(s);
+
+export const useWrite = <
+    T extends WRITE_MODE,
+    C extends string
+>(
     mode: T, 
-    key: C
+    key: C, 
+    focused: Writable<boolean>
 ): Return<T, C> => {
-    const escapedKey = `escaped${key.substring(0, 1).toUpperCase()}${key.substring(1, key.length).toLowerCase()}` as `escaped${UCFirst<C>}`;
+    const escapedKey = `escaped${key.substring(0, 1)
+        .toUpperCase()}${key.substring(1, key.length)
+            .toLowerCase()}` as `escaped${UCFirst<C>}`;
 
     const command = writable('');
     const escapedCommand = derived(
@@ -47,27 +60,24 @@ export const useWrite = <T extends WRITE_MODE, C extends string>(
         $c => $c.replaceAll(/ /g, '&nbsp;')
     );
 
-    if (mode === WRITE_MODE.KEYBOARD) {
-        useEventListener('keypress', e => command.update(c => c + e.key));
+    (mode === WRITE_MODE.KEYBOARD) && (() => {
+        useEventListener('keypress', e => {
+            get(focused) && command.update(c => c + e.key)
+        });
 
-        useEventListener('keydown', e => e.key === 'Backspace' 
-            && command.update(c => c.substring(0, c.length - 1)));
-    }
-
-    const reset = () => command.set('');
-    const set = (s: string) => command.set(s);
+        useEventListener('keydown', e => {
+            get(focused) && e.key === 'Backspace' 
+                && command.update(c => c.substring(0, c.length - 1));
+        });
+    })();
 
     let r = {
         [key]: command,
         [escapedKey]: escapedCommand,
-        reset
+        reset: reset(command)
     } as Return<T, C>;
 
-    if (mode === WRITE_MODE.PROGRAMATIC) {
-        r = { ...r, set };
-    }
-
-    console.log(r)
+    (mode === WRITE_MODE.PROGRAMATIC) && (r = { ...r, set: set(command) });
 
     return r;
 };
