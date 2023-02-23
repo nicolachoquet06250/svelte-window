@@ -1,10 +1,15 @@
 import { useEventListener } from "@svelte-use/core";
-import { derived, get, writable, type Readable, type Writable } from "svelte/store";
+import { derived, get, writable } from "svelte/store";
+import type { Readable, Writable } from "svelte/store";
+
+/* Définition de l'enum */
 
 export enum WRITE_MODE {
     KEYBOARD = 1,
     PROGRAMATIC = 2
 };
+
+/* Définition des types */
 
 type FirstLetterOf<
     S extends string
@@ -17,7 +22,10 @@ type UCFirst<
 type Store<S extends string> = 
     { [key in S]: Writable<string> } & 
     { [key in `escaped${`${UCFirst<S>}`}`]: Readable<string> } & 
-    { reset: ResetFunc }
+    { 
+        reset: ResetFunc,
+        init: SetFunc
+    }
 
 type ResetFunc = () => void;
 type SetFunc = (s: string) => void;
@@ -37,6 +45,10 @@ type Return<T, S extends string> =
         ReturnType<WRITE_MODE.KEYBOARD, S> : 
             ReturnType<WRITE_MODE.PROGRAMATIC, S>
 
+type Middleware<T = void> = (w?: Writable<string>, r?: Readable<string>) => T;
+
+/* Définition des fonctions */
+
 const reset = (command: Writable<string>): ResetFunc => 
     () => command.set('');
 const set = (command: Writable<string>): SetFunc => 
@@ -46,9 +58,10 @@ export const useWrite = <
     T extends WRITE_MODE,
     C extends string
 >(
-    mode: T, 
-    key: C, 
-    focused: Writable<boolean>
+    mode: T, key: C, 
+    focused: Writable<boolean>,
+    onValidated: Middleware<void> = () => {},
+    onLetter: Middleware<any> = () => {}
 ): Return<T, C> => {
     const escapedKey = `escaped${key.substring(0, 1)
         .toUpperCase()}${key.substring(1, key.length)
@@ -62,7 +75,15 @@ export const useWrite = <
 
     (mode === WRITE_MODE.KEYBOARD) && (() => {
         useEventListener('keypress', e => {
-            get(focused) && command.update(c => c + e.key)
+            get(focused) && (() => {
+                if (e.key === 'Enter') {
+                    onValidated(command, escapedCommand);
+                    return;
+                }
+                const r = onLetter(command, escapedCommand);
+                if (r) return r;
+                command.update(c => c + e.key)
+            })()
         });
 
         useEventListener('keydown', e => {
@@ -74,7 +95,8 @@ export const useWrite = <
     let r = {
         [key]: command,
         [escapedKey]: escapedCommand,
-        reset: reset(command)
+        reset: reset(command),
+        init: set(command)
     } as Return<T, C>;
 
     (mode === WRITE_MODE.PROGRAMATIC) && (r = { ...r, set: set(command) });

@@ -1,11 +1,20 @@
 <WindowWrapper {resizable} {movable} {style} {data} bind:focused>
-    <div>
-        <svelte:component 
-            this={DefaultPrompt}
-            color='black' />
-            <span>{@html $escapedCommand} </span>
-            <Cursor color='black' {focused} />
-    </div>
+    <main>
+        {#each $resultHistory as item}
+            <div>
+                {item}
+            </div>
+        {:else}
+            <div/>
+        {/each}
+        <div>
+            <svelte:component 
+                this={DefaultPrompt}
+                color='black' />
+                <span>{@html $currentEscaped} </span>
+                <Cursor color='black' {focused} />
+        </div>
+    </main>
 </WindowWrapper>
 
 <script lang="ts">
@@ -13,17 +22,12 @@
     import logo from "./Logo.svelte";
     import Cursor from "./Cursor.svelte";
     import DefaultPrompt from "./DefaultPrompt.svelte";
-    import { useWrite, WRITE_MODE } from "./composables";
+    import { useCommands } from "./composables";
     import type { WindowProps } from "../../../lib/@components";
-  import { writable } from "svelte/store";
+    import { writable } from "svelte/store";
 
     const wFocused = writable(false);
-
-    const { escapedCommand } = useWrite(
-        WRITE_MODE.KEYBOARD, 
-        'command', 
-        wFocused
-    );
+    const { currentEscaped, resultHistory } = useCommands(wFocused);
 
     const resizable = true;
     const movable = true;
@@ -51,14 +55,22 @@
 </script>
 
 <style scoped>
-    div {
-        padding: 10px;
+    main {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
         height: calc(100% - 20px);
+        padding: 10px;
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
         overflow: auto;
         cursor: text;
         overflow-wrap: break-word;
         hyphens: auto;
+    }
+
+    main > div {
+        height: min-content;
     }
 </style>
