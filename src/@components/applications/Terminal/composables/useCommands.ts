@@ -1,81 +1,40 @@
 import { useEventListener } from "@svelte-use/core";
-import { derived, get, writable, type Readable, type Writable } from "svelte/store";
+import { derived, get, writable } from "svelte/store";
 import { useWrite, WRITE_MODE } from "./useWrite";
+import type { Readable, Writable } from "svelte/store";
+import type { ResetFunc } from "./useWrite";
+import commandMatcher from "../commands";
 
-const hello = (
+export type Command = (
     command: Writable<string>,
     commandHistory: Writable<string[]>, 
     result: Writable<string[]>, 
     resultHistory: Writable<string[][]>,
-    reset = () => {}
-) => {
-    commandHistory.update(v => [
-        ...v, 
-        get(command)
-    ]);
-    
-    result.set([
-        `Salut ${get(command).replace('hello ', '')} !`
-    ]);
-    
-    resultHistory.update(v => [
-        ...v, 
-        get(result)
-    ]);
-    
-    reset();
-}
-
-const clear = (
-    command: Writable<string>,
-    commandHistory: Writable<string[]>, 
-    result: Writable<string[]>, 
-    resultHistory: Writable<string[][]>,
-    reset = () => {}
-) => {
-    commandHistory.update(v => [
-        ...v, 
-        get(command)
-    ]);
-    resultHistory.set([]);
-    result.set([]);
-    reset();
-}
+    reset: ResetFunc
+) => void
+export type CommandMatcher = (w: Writable<string>, r: Readable<string>) => boolean;
 
 export const useCommands = (
     focused: Writable<boolean>, 
     onEnterMiddleware: (w?: Writable<string>, r?: Readable<string>) => void = () => {}
 ) => {
     const { 
-        command,
-        escapedCommand, 
-        reset, 
-        init
+        command, escapedCommand, 
+        reset, init
     } = useWrite(
         WRITE_MODE.KEYBOARD, 
-        'command', 
-        focused,
+        'command', focused,
         (command, escapedCommand) => {
             onEnterMiddleware(command, escapedCommand);
 
-            if (get(command).startsWith('hello ')) {
-                hello(
-                    command, 
-                    commandHistory, 
-                    result, 
-                    resultHistory, 
-                    reset
-                );
-            }
-            if (get(command).trim() === 'clear') {
-                clear(
-                    command, 
-                    commandHistory, 
-                    result, 
-                    resultHistory, 
-                    reset
-                );
-            }
+            commandMatcher(
+                command, 
+                escapedCommand, 
+                commandHistory, 
+                result, 
+                resultHistory, 
+                reset
+            );
         },
         () => {
             if (get(i) > -1) {
@@ -94,16 +53,19 @@ export const useCommands = (
             .map($c => $c.replaceAll(/ /g, '&nbsp;'))
     );
 
+    const reversedCommandHistory = derived(commandHistory, $ch => $ch.reverse());
+    const reversedEscapedCommandHistory = derived(escapedCommandHistory, $ech => $ech.reverse());
+
     const i = writable(-1);
 
     const _command = derived(
-        [i, commandHistory, command], 
-        ([i, commandHistory, command]) => 
-            i === -1 ? command : commandHistory.reverse()[i]);
+        [i, reversedCommandHistory, command], 
+        ([i, reversedCommandHistory, command]) => 
+            i === -1 ? command : reversedCommandHistory[i]);
     const _escapedCommand = derived(
-        [i, escapedCommandHistory, escapedCommand], 
-        ([i, escapedCommandHistory, escapedCommand]) => 
-            i === -1 ? (escapedCommand ?? '') : escapedCommandHistory.reverse()[i]);
+        [i, reversedEscapedCommandHistory, escapedCommand], 
+        ([i, reversedEscapedCommandHistory, escapedCommand]) => 
+            i === -1 ? (escapedCommand ?? '') : reversedEscapedCommandHistory[i]);
 
     useEventListener('keydown', e => {
         switch (e.key) {

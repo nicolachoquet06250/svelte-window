@@ -27,8 +27,8 @@ type Store<S extends string> =
         init: SetFunc
     }
 
-type ResetFunc = () => void;
-type SetFunc = (s: string) => void;
+export type ResetFunc = () => void;
+export type SetFunc = (s: string) => void;
 
 type ReturnTypes<S extends string> = {
     [WRITE_MODE.KEYBOARD]: Store<S>,

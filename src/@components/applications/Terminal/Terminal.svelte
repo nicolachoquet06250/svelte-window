@@ -2,7 +2,7 @@
     <main>
         {#each $resultHistory as item}
             <div>
-                {item}
+                {@html item}
             </div>
         {:else}
             <div/>
