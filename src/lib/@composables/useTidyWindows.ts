@@ -11,7 +11,10 @@ const tidyWindowList = writable<
     }>
 >({});
 
-const tidy = (tidyWindow: ConstructorOfATypedSvelteComponent, data: Record<string, any>) => {
+const tidy = (
+    tidyWindow: ConstructorOfATypedSvelteComponent, 
+    data: Record<string, any>
+) => {
     const id = uuidv4();
     tidyWindowList.update(v => ({
         ...v, 

@@ -27,8 +27,6 @@
     import { get_current_component, onMount } from "svelte/internal";
     import { get } from "svelte/store";
     import { getContext } from "../../lib/@composables";
-    import type { CSSCursor } from "../../lib/@tools";
-    import type { MovableZoneElement } from "../../lib/@components/window";
 
     const actions = true, 
           tidy = true, 

@@ -23,7 +23,6 @@
     import Cursor from "./Cursor.svelte";
     import DefaultPrompt from "./DefaultPrompt.svelte";
     import { useCommands } from "./composables";
-    import type { WindowProps } from "../../../lib/@components";
     import { writable } from "svelte/store";
 
     const wFocused = writable(false);

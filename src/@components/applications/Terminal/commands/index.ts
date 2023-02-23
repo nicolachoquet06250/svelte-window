@@ -1,8 +1,6 @@
 import hello, { match as matchHello } from './hello';
 import clear, { match as matchClear } from './clear';
 import commandNotFound from './commandNotFound';
-import type { Command, CommandMatcher, ResetFunc } from '../composables';
-import type { Readable, Writable } from 'svelte/store';
 
 const commands = (map => {
     map.set(matchHello, hello);
@@ -12,11 +10,11 @@ const commands = (map => {
 })(new Map<CommandMatcher, Command>());
 
 export default (
-    command: Writable<string>, 
-    escapedCommand: Readable<string>,
-    commandHistory: Writable<string[]>, 
-    result: Writable<string[]>, 
-    resultHistory: Writable<string[][]>, 
+    command: CommandStore, 
+    escapedCommand: EscapedCommandStore,
+    commandHistory: ArrayStore<string>, 
+    result: ArrayStore<string>, 
+    resultHistory: MatrixStore<string>, 
     reset: ResetFunc
 ) => {
     const commandsEntries = commands.entries();

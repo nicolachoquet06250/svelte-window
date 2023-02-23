@@ -1,14 +1,13 @@
 import { get } from "svelte/store";
-import type { Command, CommandMatcher } from "../composables";
 
-export const match: CommandMatcher = command => get(command).trim() === 'clear'
+export const match: CommandMatcher = command => get<string>(command).trim() === 'clear'
 
 export default ((
     command, commandHistory, 
     result, resultHistory,
     reset = () => {}
 ) => {
-    commandHistory.update(v => [
+    commandHistory.update((v: string[]) => [
         ...v, 
         get(command)
     ]);

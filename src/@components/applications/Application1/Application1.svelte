@@ -11,7 +11,6 @@
 <script lang="ts">
     import { DefaultTidyWindow, WindowWrapper } from "../../../lib/@components";
     import { MacOsHeader } from "../../headers";
-    import type { WindowProps } from "../../../lib/@components";
 
     const resizable = true;
     const movable = true;

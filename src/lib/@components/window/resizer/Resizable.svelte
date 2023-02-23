@@ -25,8 +25,6 @@
     import { onMount } from "svelte";
     import ResizerGroup from "./WindowResizerGroup.svelte";
     import { useFocus, useTidyWindows, useContext } from "../../../@composables";
-    import type { Point } from "../Movable.svelte";
-    import type { ClickedEvent, ResizeEvent, AvailableSide } from "./WindowResizer.svelte";
 
     const { list: tidyWindowList } = useTidyWindows();
     const { list: windowList } = useFocus();
@@ -197,10 +195,6 @@
             $movableZoneElementContext.element?.removeEventListener('dblclick', handleDblClick);
         }
     });
-</script>
-
-<script lang='ts' context='module'>
-    export type BoxSize = { width: number, height: number };
 </script>
 
 <style scoped>

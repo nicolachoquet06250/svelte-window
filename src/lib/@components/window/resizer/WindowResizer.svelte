@@ -12,7 +12,6 @@
 <script lang='ts'>
     import { createEventDispatcher } from "svelte";
     import { getContext } from "../../../@composables";
-    import type { Point } from "../Movable.svelte";
 
     export let side: AvailableSide = null;
     export let clicked = false;
@@ -68,22 +67,6 @@
     };
 
     $readonly: clicked;
-</script>
-
-<script lang='ts' context='module'>
-    export type AvailableSide = 'left' | 'right' | 'top' | 'bottom';
-    export type ClickedEvent = CustomEvent<{
-        side: AvailableSide,
-        e: MouseEvent
-    }>;
-    export type ResizeEvent = CustomEvent<{
-        size: {
-            width?: number,
-            height?: number
-        }, 
-        side: AvailableSide,
-        e: MouseEvent
-    }>;
 </script>
 
 <style scoped>

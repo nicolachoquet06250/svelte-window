@@ -1,5 +1,4 @@
 import { derived, get } from "svelte/store";
-import type { Command } from "../composables";
 
 export default ((
     command, commandHistory, 
@@ -8,10 +7,10 @@ export default ((
 ) => {
     const escapedCommand = derived(
         command, 
-        $c => $c.replaceAll(/ /g, '&nbsp;')
+        ($c: string) => $c.replaceAll(/ /g, '&nbsp;')
     );
     result.set([`command "${get(escapedCommand)}" not found !`]);
-    resultHistory.update(v => [
+    resultHistory.update((v: string[]) => [
         ...v, 
         get(result)
     ]);

@@ -1,22 +1,11 @@
 import { useEventListener } from "@svelte-use/core";
 import { derived, get, writable } from "svelte/store";
 import { useWrite, WRITE_MODE } from "./useWrite";
-import type { Readable, Writable } from "svelte/store";
-import type { ResetFunc } from "./useWrite";
 import commandMatcher from "../commands";
 
-export type Command = (
-    command: Writable<string>,
-    commandHistory: Writable<string[]>, 
-    result: Writable<string[]>, 
-    resultHistory: Writable<string[][]>,
-    reset: ResetFunc
-) => void
-export type CommandMatcher = (w: Writable<string>, r: Readable<string>) => boolean;
-
 export const useCommands = (
-    focused: Writable<boolean>, 
-    onEnterMiddleware: (w?: Writable<string>, r?: Readable<string>) => void = () => {}
+    focused: FocusedStore, 
+    onEnterMiddleware: (w?: CommandStore, r?: EscapedCommandStore) => void = () => {}
 ) => {
     const { 
         command, escapedCommand, 

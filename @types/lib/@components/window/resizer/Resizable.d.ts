@@ -1,0 +1,1 @@
+declare type BoxSize = { width: number, height: number };

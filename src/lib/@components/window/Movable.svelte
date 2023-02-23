@@ -8,7 +8,6 @@
 <script lang='ts'>
     import { onMount } from "svelte";
     import { useFocus, useContext } from "../../@composables";
-    import type { CSSCursor } from "../../@tools";
 
     const { focus } = useFocus();
 
@@ -106,15 +105,4 @@
     $: $movableZoneContext && !$fullscreenContext && 
         $movableZoneContext.element?.addEventListener('mousedown', handleMouseDown);
     $: $fullscreenContext && (document.body.style.cursor = cursor);
-</script>
-
-<script lang='ts' context='module'>
-    export type MovableZoneElement = {
-        component: (ATypedSvelteComponent & Partial<{ 
-            $$set: (v: Record<string, any>) => void,
-            $$prop_def: Record<string, any>
-        }>) | null,
-        element: HTMLElement
-    };
-    export type Point = { x: number, y: number };
 </script>

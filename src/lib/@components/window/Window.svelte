@@ -34,13 +34,11 @@
 </section>
 
 <script lang='ts'>
-    import { onMount, SvelteComponentTyped } from "svelte";
+    import { onMount } from "svelte";
     import defaultLogo from '../../../assets/svelte.svg';
     import { useEventListener, writable } from "@svelte-use/core";
     import { useFocus, useTidyWindows, getContext, useContext } from "../../@composables";
     import WindowMainHeader from "./WindowMainHeader.svelte";
-    import type { MovableZoneElement, Point } from "./Movable.svelte";
-    import type { BoxSize } from "./resizer";
 
     const movableContext = useContext<boolean>('movable', false);
     const movableZoneElementContext = 
@@ -139,47 +137,6 @@
     $readonly: windowWidth;
     $readonly: windowHeight;
     $readonly: focused;
-</script>
-
-<script lang='ts' context='module'>
-    type HeaderProps = {
-        headerHeight: number,
-        maxified: boolean,
-        resizable: boolean,
-        stowable: boolean,
-        title: string,
-        logo: string | ConstructorOfATypedSvelteComponent,
-    };
-    type HeaderEvents = {};
-
-    export type HeaderComponent = SvelteComponentTyped<HeaderProps, HeaderEvents, {}>;
-
-    export type WindowProps = Partial<{
-        rounded: boolean,
-        title: string,
-        width: number,
-        height: number,
-        positionX: number,
-        positionY: number,
-        minWidth: number,
-        minHeight: number,
-        windowWidth: number,
-        windowHeight: number,
-        logo: string | ConstructorOfATypedSvelteComponent,
-        header: ConstructorOfATypedSvelteComponent,
-        tidy: ConstructorOfATypedSvelteComponent
-    }>;
-
-    export type WindowCssVars = Partial<
-        Record<
-            '--bg-color' | 
-            '--border-color' | 
-            '--border-size' | 
-            '--title-color' | 
-            '--window-position', 
-            string
-        >
-    >;
 </script>
 
 <style scoped>

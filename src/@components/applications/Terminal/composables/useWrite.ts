@@ -1,6 +1,5 @@
 import { useEventListener } from "@svelte-use/core";
 import { derived, get, writable } from "svelte/store";
-import type { Readable, Writable } from "svelte/store";
 
 /* Définition de l'enum */
 
@@ -9,49 +8,11 @@ export enum WRITE_MODE {
     PROGRAMATIC = 2
 };
 
-/* Définition des types */
-
-type FirstLetterOf<
-    S extends string
-> = S extends `${infer FL}${string}` ? FL : S;
-type UCFirst<
-    S extends string
-> = S extends `${FirstLetterOf<S>}${infer Rest}` 
-    ? `${Uppercase<FirstLetterOf<S>>}${Lowercase<Rest>}` : S;
-
-type Store<S extends string> = 
-    { [key in S]: Writable<string> } & 
-    { [key in `escaped${`${UCFirst<S>}`}`]: Readable<string> } & 
-    { 
-        reset: ResetFunc,
-        init: SetFunc
-    }
-
-export type ResetFunc = () => void;
-export type SetFunc = (s: string) => void;
-
-type ReturnTypes<S extends string> = {
-    [WRITE_MODE.KEYBOARD]: Store<S>,
-    [WRITE_MODE.PROGRAMATIC]: Store<S> & { set: SetFunc }
-};
-
-type ReturnType<
-    T extends WRITE_MODE,
-    S extends string
-> = ReturnTypes<S>[T];
-
-type Return<T, S extends string> = 
-    T extends WRITE_MODE.KEYBOARD ? 
-        ReturnType<WRITE_MODE.KEYBOARD, S> : 
-            ReturnType<WRITE_MODE.PROGRAMATIC, S>
-
-type Middleware<T = void> = (w?: Writable<string>, r?: Readable<string>) => T;
-
 /* Définition des fonctions */
 
-const reset = (command: Writable<string>): ResetFunc => 
+const reset = (command: CommandStore): ResetFunc => 
     () => command.set('');
-const set = (command: Writable<string>): SetFunc => 
+const set = (command: CommandStore): SetFunc => 
     (s: string) => command.set(s);
 
 export const useWrite = <
@@ -59,7 +20,7 @@ export const useWrite = <
     C extends string
 >(
     mode: T, key: C, 
-    focused: Writable<boolean>,
+    focused: FocusedStore,
     onValidated: Middleware<void> = () => {},
     onLetter: Middleware<any> = () => {}
 ): Return<T, C> => {
