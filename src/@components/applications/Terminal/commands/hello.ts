@@ -1,16 +1,9 @@
 import { get } from "svelte/store";
+import { createCommand, createCommandMatcher } from "../createCommand";
 
-export const match: CommandMatcher = command => get<string>(command).startsWith('hello ');
+export const match = createCommandMatcher(command => get<string>(command).startsWith('hello '));
 
-export default ((
-    command, commandHistory, 
-    result, resultHistory
-) => {
-    commandHistory.update((v: string[]) => [
-        ...v, 
-        get(command)
-    ]);
-    
+export default createCommand((command, result, resultHistory) => {
     result.set([
         `Salut ${get<string>(command).replace('hello ', '')} !`
     ]);
@@ -19,4 +12,6 @@ export default ((
         ...v, 
         get(result)
     ]);
-}) as Command
+
+    return true;
+})

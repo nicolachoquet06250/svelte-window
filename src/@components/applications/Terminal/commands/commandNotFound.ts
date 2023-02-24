@@ -1,8 +1,10 @@
 import { derived, get } from "svelte/store";
+import { createCommand, createCommandMatcher } from "../createCommand";
 
-export default ((
-    command, commandHistory, 
-    result, resultHistory,
+export const match = createCommandMatcher(() => true);
+
+export default createCommand((
+    command, result, resultHistory,
     reset = () => {}
 ) => {
     const escapedCommand = derived(
@@ -15,4 +17,6 @@ export default ((
         get(result)
     ]);
     reset();
-}) as Command
+
+    return false;
+})

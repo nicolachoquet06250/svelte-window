@@ -1,9 +1,8 @@
 declare type Command = (
     command: CommandStore,
-    commandHistory: Writable<string[]>, 
     result: Writable<string[]>, 
     resultHistory: Writable<string[][]>
-) => void
+) => boolean | void
 declare type CommandMatcher = (
     w: CommandStore, 
     r: EscapedCommandStore
