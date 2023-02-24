@@ -33,7 +33,7 @@
 
     const logo = '/vite.svg';
 
-    const windows = [
+    const windows: Windows = [
       {
         movable: true,
         resizable: true,
