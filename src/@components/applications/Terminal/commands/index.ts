@@ -23,8 +23,7 @@ export default (
         if (match(command, escapedCommand)) {
             commandFn(
                 command, commandHistory, 
-                result, resultHistory, 
-                reset
+                result, resultHistory
             );
             matched = true;
             break;
@@ -35,7 +34,8 @@ export default (
         command, 
         commandHistory, 
         result, 
-        resultHistory, 
-        reset
+        resultHistory
     );
+
+    reset();
 }

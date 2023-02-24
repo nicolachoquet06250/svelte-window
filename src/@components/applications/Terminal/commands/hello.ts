@@ -4,8 +4,7 @@ export const match: CommandMatcher = command => get<string>(command).startsWith(
 
 export default ((
     command, commandHistory, 
-    result, resultHistory,
-    reset = () => {}
+    result, resultHistory
 ) => {
     commandHistory.update((v: string[]) => [
         ...v, 
@@ -20,6 +19,4 @@ export default ((
         ...v, 
         get(result)
     ]);
-    
-    reset();
 }) as Command

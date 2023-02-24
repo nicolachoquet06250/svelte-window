@@ -41,15 +41,17 @@ export const useWrite = <
                     onValidated(command, escapedCommand);
                     return;
                 }
-                const r = onLetter(command, escapedCommand);
+                const r = onLetter(command, escapedCommand, e);
                 if (r) return r;
                 command.update(c => c + e.key)
             })()
         });
 
         useEventListener('keydown', e => {
-            get(focused) && e.key === 'Backspace' 
-                && command.update(c => c.substring(0, c.length - 1));
+            if (get(focused) && e.key === 'Backspace') {
+                onLetter(command, escapedCommand, e)
+                command.update(c => c.substring(0, c.length - 1));
+            }
         });
     })();
 

@@ -28,4 +28,4 @@ declare type Return<T, S extends string> =
         ReturnType<WRITE_MODE.KEYBOARD, S> : 
             ReturnType<WRITE_MODE.PROGRAMATIC, S>
 
-declare type Middleware<T = void> = (w?: Writable<string>, r?: Readable<string>) => T;
+declare type Middleware<T = void> = (w?: Writable<string>, r?: Readable<string>, e?: Event) => T;
