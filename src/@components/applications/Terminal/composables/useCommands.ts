@@ -75,15 +75,10 @@ export const useCommands = (
 
     useEventListener('keydown', e => {
         (keyDownActions => e.key in keyDownActions && keyDownActions[e.key]())({
-            ArrowUp() {
-                get(i) < get(commandHistory).length - 1 && 
-                    i.update(i => ++i);
-            },
-            ArrowDown() {
-                get(i) > -1 && i.update(i => --i);
-            }
-        })
-        
+            ArrowUp: () => get(i) < get(commandHistory).length - 1 && 
+                i.update(i => ++i),
+            ArrowDown: () => get(i) > -1 && i.update(i => --i)
+        });
     });
 
     return {

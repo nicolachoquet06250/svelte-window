@@ -9,12 +9,12 @@ export default (
     resultHistory: MatrixStore<string>, 
     reset: ResetFunc
 ) => {
-    for (const { match, command: commandFn } of routes().values()) {
+    result.subscribe((r: string[]) => 
+        resultHistory.update((rh: string[][]) => [...rh, r]))
+
+    for (const { match, command: execCommand } of routes().values()) {
         if (match(command, escapedCommand)) {
-            const r = commandFn(
-                command, result, resultHistory
-            );
-            if (r) {
+            if (execCommand(command, result, resultHistory)) {
                 commandHistory.update((v: string[]) => [
                     ...v, 
                     get(command)
