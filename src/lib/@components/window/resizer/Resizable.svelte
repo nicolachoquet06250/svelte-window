@@ -64,30 +64,21 @@
         element: null
     });
 
-    let savedSize = {
-        width: 0,
-        height: 0
-    };
+    let savedSize = { width: 0, height: 0 };
+
+    $: saveSize = (sizeSide: 'width' | 'height') => {
+        if ($fullscreenContext) {
+            savedSize = { ...savedSize, [sizeSide]: size[sizeSide] };
+            return 'auto';
+        }
+        const r = (resizeTo !== null ? tmpSize[sizeSide] : savedSize[sizeSide]) + 'px';
+        savedSize = { ...savedSize, [sizeSide]: size[sizeSide] };
+        return r;
+    }
 
     // computed & subscribes
-    $: width = (() => {
-        if ($fullscreenContext) {
-            savedSize = { ...savedSize, width: size.width };
-            return 'auto';
-        }
-        const r = (resizeTo !== null ? tmpSize.width : savedSize.width) + 'px';
-        savedSize = { width: 0, height: 0 };
-        return r;
-    })();
-    $: height = (() => {
-        if ($fullscreenContext) {
-            savedSize = { ...savedSize, height: size.height }
-            return 'auto';
-        }
-        const r = (resizeTo !== null ? tmpSize.height : savedSize.height) + 'px';
-        savedSize = { ...savedSize, height: 0 };
-        return r;
-    })();
+    $: width = saveSize('width');
+    $: height = saveSize('height');
 
     $: unsubscribe = windowSizeContext?.subscribe(v => {
         v.width && v.height && (() => {
