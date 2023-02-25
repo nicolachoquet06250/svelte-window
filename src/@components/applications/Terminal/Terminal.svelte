@@ -1,8 +1,12 @@
 <WindowWrapper {resizable} {movable} {style} {data} bind:focused>
     <main>
         {#each $resultHistory as item}
-            <div>
-                {@html item}
+            <div class:response-item={true}>
+                {#each item as e}
+                    <div>
+                        {@html e}
+                    </div>
+                {/each}
             </div>
         {:else}
             <div/>
@@ -24,6 +28,7 @@
     import DefaultPrompt from "./DefaultPrompt.svelte";
     import { useCommands } from "./composables";
     import { writable } from "svelte/store";
+  import { each } from "svelte/internal";
 
     const wFocused = writable(false);
     const { currentEscaped, resultHistory } = useCommands(wFocused);
@@ -71,5 +76,9 @@
 
     main > div {
         height: min-content;
+    }
+
+    .response-item {
+        margin-bottom: 10px;
     }
 </style>

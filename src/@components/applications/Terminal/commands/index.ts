@@ -9,9 +9,6 @@ export default (
     resultHistory: MatrixStore<string>, 
     reset: ResetFunc
 ) => {
-    result.subscribe((r: string[]) => 
-        resultHistory.update((rh: string[][]) => [...rh, r]))
-
     for (const { match, command: execCommand } of routes().values()) {
         if (match(command, escapedCommand)) {
             if (execCommand(command, result, resultHistory)) {
@@ -25,4 +22,15 @@ export default (
     }
 
     reset();
+
+    let alreadyRunned = false;
+    const unsubscribe = result.subscribe((r: string[]) => {
+        if (!alreadyRunned) {
+            resultHistory.update((rh: string[][]) => [...rh, r])
+            try {
+                alreadyRunned = true;
+                unsubscribe()
+            } catch(err) {}
+        }
+    })
 }

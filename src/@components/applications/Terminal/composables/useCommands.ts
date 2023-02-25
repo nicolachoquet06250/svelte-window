@@ -10,24 +10,24 @@ export const useCommands = (
     const onValidated: Middleware<void> = (command, escapedCommand) => {
         onEnterMiddleware(command, escapedCommand);
 
-            if (get(i) > -1) {
-                command.set(get(_command))
-            }
+        if (get(i) > -1) {
+            command.set(get(_command))
+        }
 
-            commandMatcher(
-                command, 
-                escapedCommand, 
-                commandHistory, 
-                result, 
-                resultHistory, 
-                reset
-            );
-            
-            i.set(-1);
+        commandMatcher(
+            command, 
+            escapedCommand, 
+            commandHistory, 
+            result, 
+            resultHistory, 
+            reset
+        );
+        
+        i.set(-1);
     };
 
     const onLetter: Middleware<void> = (_, __, e: KeyboardEvent) => {
-        if ([...'abcdefghijklmnopqrstuvwxyz'.split(''), 'Backspace'].includes(e.key)) {
+        if ([...'abcdefghijklmnopqrstuvwxyz '.split(''), 'Backspace'].includes(e.key)) {
             if (get(i) > -1) {
                 init(get(_command));
                 i.set(-1);
