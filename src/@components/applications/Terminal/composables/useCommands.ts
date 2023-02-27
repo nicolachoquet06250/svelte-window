@@ -2,6 +2,8 @@ import { useEventListener } from "@svelte-use/core";
 import { derived, get, writable } from "svelte/store";
 import { useWrite, WRITE_MODE } from "./useWrite";
 import commandMatcher from "../commands";
+import { useKeyPress } from "../../../../lib/@tools/events/dblkeypress";
+import routes from "../commands/routing/routes";
 
 export const useCommands = (
     focused: FocusedStore, 
@@ -44,6 +46,8 @@ export const useCommands = (
         onValidated, onLetter
     );
 
+    const onKeyPress = useKeyPress('Tab');
+
     const i = writable(-1);
 
     const result = writable([]);
@@ -74,7 +78,25 @@ export const useCommands = (
             i === -1 ? (escapedCommand ?? '') : reversedEscapedCommandHistory[i]);
 
     useEventListener('keydown', e => {
+        if (['Tab'].includes(e.key)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
         (keyDownActions => e.key in keyDownActions && keyDownActions[e.key]())({
+            Tab: () => onKeyPress(
+                () => {
+                    const foundCommands = [...routes().entries()]
+                        .map(i => i[0])
+                        .filter(i => i !== 'notFound')
+                        .filter(v => v.startsWith(get(command)));
+                    init(foundCommands.length === 1 ? foundCommands.pop() : get(command));
+                    console.log(foundCommands.length === 1 ? foundCommands.pop() : get(command));
+                },
+                () => {
+                    console.log('double');
+                }
+            )(e),
             ArrowUp: () => get(i) < get(commandHistory).length - 1 && 
                 i.update(i => ++i),
             ArrowDown: () => get(i) > -1 && i.update(i => --i)
