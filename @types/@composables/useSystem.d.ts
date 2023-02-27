@@ -16,4 +16,4 @@ declare type Children = ParsedItem[];
 declare type GetChildren = (s: TreeItem[], r: string = '', dn: string = '') => ParsedItem[];
 declare type ExecuteFlags = (command: CommandStore, system: SystemStore) => string;
 
-declare type SystemStore = Readable<ParsedItem[]>;
+declare type SystemStore = WReadable<ParsedItem[]>;

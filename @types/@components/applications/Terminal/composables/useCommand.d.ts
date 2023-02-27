@@ -1,7 +1,7 @@
 declare type Command = (
     command: CommandStore,
-    result: Writable<string[]>, 
-    resultHistory?: Writable<string[][]>
+    result: WWritable<string[]>, 
+    resultHistory?: WWritable<string[][]>
 ) => boolean | void
 declare type CommandMatcher = (
     w: CommandStore, 
@@ -9,8 +9,8 @@ declare type CommandMatcher = (
 ) => boolean;
 
 declare type OnValidated = (
-    command: Writable<string>, 
-    escapedCommand: Readable<string>
+    command: WWritable<string>, 
+    escapedCommand: WReadable<string>
 ) => void;
 
 declare type OnLetter = () => void;

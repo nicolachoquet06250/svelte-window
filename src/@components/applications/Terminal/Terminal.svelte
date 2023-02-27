@@ -28,7 +28,6 @@
     import DefaultPrompt from "./DefaultPrompt.svelte";
     import { useCommands } from "./composables";
     import { writable } from "svelte/store";
-  import { each } from "svelte/internal";
 
     const wFocused = writable(false);
     const { currentEscaped, resultHistory } = useCommands(wFocused);

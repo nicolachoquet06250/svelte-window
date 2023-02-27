@@ -1,4 +1,4 @@
-declare type FormatTree = (system: Readable<ParsedItem[]>) => 
+declare type FormatTree = (system: WReadable<ParsedItem[]>) => 
     string[]
 declare type GetFlag = (command: CommandStore) => 
     Record<`-${string}`, string | true>;

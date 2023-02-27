@@ -1,14 +1,14 @@
 declare type Store<S extends string> = 
-    { [key in S]: Writable<string> } & 
-    { [key in `escaped${`${UCFirst<S>}`}`]: Readable<string> } & 
+    { [key in S]: WWritable<string> } & 
+    { [key in `escaped${`${UCFirst<S>}`}`]: WReadable<string> } & 
     { 
         reset: ResetFunc,
         init: SetFunc
     }
 
-declare type CommandStore = Writable<string>;
-declare type EscapedCommandStore = Readable<string>;
-declare type FocusedStore = Writable<boolean>;
+declare type CommandStore = WWritable<string>;
+declare type EscapedCommandStore = WReadable<string>;
+declare type FocusedStore = WWritable<boolean>;
 
 declare type ResetFunc = () => void;
 declare type SetFunc = (s: string) => void;
@@ -28,4 +28,4 @@ declare type Return<T, S extends string> =
         ReturnType<WRITE_MODE.KEYBOARD, S> : 
             ReturnType<WRITE_MODE.PROGRAMATIC, S>
 
-declare type Middleware<T = void> = (w?: Writable<string>, r?: Readable<string>, e?: Event) => T;
+declare type Middleware<T = void> = (w?: WWritable<string>, r?: WReadable<string>, e?: Event) => T;
