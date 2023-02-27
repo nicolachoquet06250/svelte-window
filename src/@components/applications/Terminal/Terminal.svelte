@@ -28,6 +28,7 @@
     import DefaultPrompt from "./DefaultPrompt.svelte";
     import { useCommands } from "./composables";
     import { writable } from "svelte/store";
+    import TerminalHeader from "./TerminalHeader.svelte";
 
     const wFocused = writable(false);
     const { currentEscaped, resultHistory } = useCommands(wFocused);
@@ -51,6 +52,7 @@
         title: 'Terminal',
         rounded: true,
         tidy: DefaultTidyWindow,
+        header: TerminalHeader,
         positionX: 400,
         positionY: 400,
         logo
