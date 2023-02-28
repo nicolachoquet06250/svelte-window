@@ -181,6 +181,7 @@
         padding-right: 5px;
         box-sizing: border-box;
         width: 100%;
+        overflow-x: hidden;
     }
     .custom-option:hover {
         cursor: pointer;

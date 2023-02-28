@@ -12,9 +12,13 @@
     <div class:select-wrapper-container={true}>
         <Dropdown rounded 
                 bind:selected 
-                options={[ 'tesla', 'volvo', 'mercedes' ]}>
+                options={Object.keys(prompts)}>
             <svelte:fragment slot="selected" let:selected={selected}>
-                <svelte:component this={prompts[selected]} color='black' wrapped={true} />
+                {#if prompts[selected]}
+                    <svelte:component this={prompts[selected]} color='black' wrapped={true} />
+                {:else}
+                    Selectionner un élément
+                {/if}
             </svelte:fragment>
 
             <svelte:fragment slot="option" let:value={value} let:selected={selected}>
@@ -58,6 +62,7 @@
     import { get_current_component, onMount } from "svelte/internal";
     import Dropdown from "../../../lib/@components/Dropdown.svelte";
     import { useFocus, getContext, useContext } from "../../../lib/@composables";
+    import CustomPrompt from "./CustomPrompt.svelte";
     import DefaultPrompt from "./DefaultPrompt.svelte";
 
     const actions = true, 
@@ -67,9 +72,8 @@
           close = true;
 
     const prompts = {
-        tesla: DefaultPrompt,
-        volvo: DefaultPrompt,
-        mercedes: DefaultPrompt
+        default: DefaultPrompt,
+        custom: CustomPrompt
     };
 
     const { focus } = useFocus();
@@ -90,7 +94,7 @@
     export let cursor: CSSCursor = 'default';
 
     let element: HTMLElement = null;
-    let selected = 'tesla';
+    let selected = 'default';
 
     $: $promptContext = prompts[selected];
     
