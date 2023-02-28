@@ -5,6 +5,11 @@
         on:upset={handleUpset(tidyWindowId)} />
 {/each}
 
+<!-- 
+  @TODO Régler le bug qui fait que quand on range les 2 fenetres et qu'on re agrandi la premiere, 
+  la case reste avec le meme logo et le meme titre 
+-->
+
 <script lang="ts">
     import { useTidyWindows } from "../@composables";
 
