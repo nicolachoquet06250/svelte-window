@@ -34,6 +34,23 @@
     const wFocused = writable(false);
     const { currentEscaped, resultHistory } = useCommands(wFocused);
 
+    resultHistory.set([
+        [
+            `Help =><br/>
+&nbsp;&nbsp;• hello &#60;name&#62;<br/>
+&nbsp;&nbsp;• ls<br/>
+&nbsp;&nbsp;• ls -las<br/>
+&nbsp;&nbsp;• clear<br/>
+En appuillant une fois sur \'tab\', votre commande se completera automatiquement`
+        ]
+        // ['help =>'],
+        // [' • hello <name>'],
+        // [' • ls'],
+        // [' • ls -las'],
+        // [' • clear'],
+        // ['En appuillant une fois sur \'tab\', votre commande se completera automatiquement'],
+    ])
+
     const promptContext = useContext('prompt', DefaultPrompt);
 
     const resizable = true;
