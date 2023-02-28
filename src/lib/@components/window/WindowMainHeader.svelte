@@ -59,6 +59,8 @@
 
     const component = get_current_component();
 
+    export let id: number = 0;
+
     export let headerHeight: number;
     export let logo: string | ConstructorOfATypedSvelteComponent;
     export let title: string;
@@ -79,7 +81,7 @@
         $movableZoneElementContext = { element, component };
     });
 
-    useEventListener(element, 'mousedown', () => focus(title));
+    useEventListener(element, 'mousedown', () => focus(id));
 
     const handleMaxify = () => 
         ($fullscreenContext = !$fullscreenContext);

@@ -26,7 +26,8 @@
             {headerHeight}
             {maxified} {title}
             {rounded} {stowable}
-            resizable={$resizableContext} {logo}
+            resizable={$resizableContext} 
+            {logo} {id}
             on:tidy={handleTidy}
             on:close={handleClose} />
     {/if}

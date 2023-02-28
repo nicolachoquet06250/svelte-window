@@ -23,10 +23,11 @@
 </header>
 
 <script lang='ts'>
+    import { useEventListener } from "@svelte-use/core";
     import { createEventDispatcher } from "svelte";
     import { get_current_component, onMount } from "svelte/internal";
     import { get } from "svelte/store";
-    import { getContext } from "../../lib/@composables";
+    import { getContext, useFocus } from "../../lib/@composables";
 
     const actions = true, 
           tidy = true, 
@@ -36,6 +37,8 @@
 
     const dispatch = createEventDispatcher();
     const component = get_current_component();
+
+    export let id: number = 0;
 
     export let headerHeight: number;
     export let title: string;
@@ -52,6 +55,7 @@
         'movable-zone-element'
     );
     const fullscreenContext = getContext<boolean>('fullscreen');
+    const { focus } = useFocus();
 
     const handleMaxify = () => 
         fullscreenContext.set(!get(fullscreenContext));
@@ -64,6 +68,8 @@
     onMount(() => {
         $movableZoneElementContext = { element, component };
     });
+
+    useEventListener(element, 'mousedown', () => focus(id));
 </script>
 
 <style scoped>
