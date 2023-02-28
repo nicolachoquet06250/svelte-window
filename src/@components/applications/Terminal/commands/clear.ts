@@ -1,9 +1,9 @@
 import { get } from "svelte/store";
 import { createCommand, createCommandMatcher } from "../createCommand";
 
-export const match = createCommandMatcher(command => get<string>(command).trim() === 'clear')
+export const match = createCommandMatcher(({ command }) => get<string>(command).trim() === 'clear')
 
-export default createCommand((command, result, resultHistory) => {
+export default createCommand(({ result, resultHistory }) => {
     result.set([]);
     resultHistory.set([]);
 

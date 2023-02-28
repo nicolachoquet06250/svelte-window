@@ -11,8 +11,8 @@ export default (
     manualy: boolean
 ) => {
     for (const { match, command: execCommand } of routes().values()) {
-        if (match(command, escapedCommand)) {
-            if (execCommand(command, result, resultHistory, manualy)) {
+        if (match({ command, escapedCommand })) {
+            if (execCommand({ command, result, resultHistory, manualy })) {
                 commandHistory.update((v: string[]) => [
                     ...v, 
                     get(command)

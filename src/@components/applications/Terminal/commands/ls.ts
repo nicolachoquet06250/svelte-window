@@ -4,10 +4,10 @@ import { createCommand, createCommandMatcher } from "../createCommand";
 import { executeFlags, setFlag, setWithoutFlag } from "../createCommandFlags";
 import { mounths } from "../../../../lib/@tools/date";
 
-export const match = createCommandMatcher((command) => 
+export const match = createCommandMatcher(({ command }) => 
     get<string>(command).startsWith('ls'));
 
-export default createCommand((command, result) => {
+export default createCommand(({ command, result }) => {
     const { system } = useSystem();
 
     setFlag('las', () => {

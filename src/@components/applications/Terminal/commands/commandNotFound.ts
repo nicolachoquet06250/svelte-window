@@ -3,7 +3,7 @@ import { createCommand, createCommandMatcher } from "../createCommand";
 
 export const match = createCommandMatcher(() => true);
 
-export default createCommand((command, result) => {
+export default createCommand(({ command, result }) => {
     const escapedCommand = derived(
         command, 
         ($c: string) => $c.replaceAll(/ /g, '&nbsp;')

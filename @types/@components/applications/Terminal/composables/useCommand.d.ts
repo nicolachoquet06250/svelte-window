@@ -1,13 +1,13 @@
-declare type Command = (
+declare type Command = (options: {
     command: CommandStore,
     result: WWritable<string[]>, 
     resultHistory?: WWritable<string[][]>,
     manualy?: boolean
-) => boolean | void
-declare type CommandMatcher = (
-    w: CommandStore, 
-    r: EscapedCommandStore
-) => boolean;
+}) => boolean | void
+declare type CommandMatcher = (options: {
+    command: CommandStore, 
+    escapedCommand: EscapedCommandStore
+}) => boolean;
 
 declare type OnValidated = (
     command: WWritable<string>, 
