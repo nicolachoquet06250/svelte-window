@@ -21,7 +21,7 @@ export const useWrite = <
 >(
     mode: T, key: C, 
     focused: FocusedStore,
-    onValidated: Middleware<void> = () => {},
+    onValidated: ManualMiddleware<void> = () => {},
     onLetter: Middleware<any> = () => {}
 ): Return<T, C> => {
     const escapedKey = `escaped${key.substring(0, 1)

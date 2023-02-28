@@ -2,6 +2,11 @@
     <main>
         {#each $resultHistory as item}
             <div class:response-item={true}>
+                {#if item.length > 0}
+                    <svelte:component 
+                        this={$promptContext}
+                        color='black' />
+                {/if}
                 {#each item as e}
                     <div>
                         {@html e}

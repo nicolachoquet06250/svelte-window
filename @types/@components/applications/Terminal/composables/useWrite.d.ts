@@ -29,3 +29,4 @@ declare type Return<T, S extends string> =
             ReturnType<WRITE_MODE.PROGRAMATIC, S>
 
 declare type Middleware<T = void> = (w?: WWritable<string>, r?: WReadable<string>, e?: Event) => T;
+declare type ManualMiddleware<T = void> = (w?: WWritable<string>, r?: WReadable<string>, b: boolean = false) => T;

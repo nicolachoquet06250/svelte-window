@@ -9,7 +9,7 @@ export const useCommands = (
     focused: FocusedStore, 
     onEnterMiddleware: (w?: CommandStore, r?: EscapedCommandStore) => void = () => {}
 ) => {
-    const onValidated: Middleware<void> = (command, escapedCommand) => {
+    const onValidated: ManualMiddleware<void> = (command, escapedCommand, manualy: boolean = false) => {
         onEnterMiddleware(command, escapedCommand);
 
         if (get(i) > -1) {
@@ -22,7 +22,8 @@ export const useCommands = (
             commandHistory, 
             result, 
             resultHistory, 
-            reset
+            reset,
+            manualy
         );
         
         i.set(-1);
@@ -113,7 +114,7 @@ export const useCommands = (
             command.set(_command);
         },
         execute() {
-            onValidated(command, escapedCommand);
+            onValidated(command, escapedCommand, true);
         }
     }
 };

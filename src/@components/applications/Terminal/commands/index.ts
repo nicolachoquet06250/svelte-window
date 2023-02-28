@@ -7,11 +7,12 @@ export default (
     commandHistory: ArrayStore<string>, 
     result: ArrayStore<string>, 
     resultHistory: MatrixStore<string>, 
-    reset: ResetFunc
+    reset: ResetFunc,
+    manualy: boolean
 ) => {
     for (const { match, command: execCommand } of routes().values()) {
         if (match(command, escapedCommand)) {
-            if (execCommand(command, result, resultHistory)) {
+            if (execCommand(command, result, resultHistory, manualy)) {
                 commandHistory.update((v: string[]) => [
                     ...v, 
                     get(command)
