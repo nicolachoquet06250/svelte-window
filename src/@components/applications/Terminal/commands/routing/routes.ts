@@ -1,3 +1,4 @@
+import help, { match as matchHelp } from '../help';
 import hello, { match as matchHello } from '../hello';
 import clear, { match as matchClear } from '../clear';
 import ls, { match as matchLs } from '../ls';
@@ -5,6 +6,11 @@ import commandNotFound, { match as notFound } from '../commandNotFound';
 import generateRoutes from './generateRoutes';
 
 export default generateRoutes([
+    {
+        name: 'help',
+        command: help,
+        match: matchHelp
+    },
     {
         name: 'hello',
         command: hello,

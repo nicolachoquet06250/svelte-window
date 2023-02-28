@@ -109,6 +109,11 @@ export const useCommands = (
         command: escapedCommand,
         resultHistory,
         commandHistory,
-        init
+        init, setCommand(_command: string) {
+            command.set(_command);
+        },
+        execute() {
+            onValidated(command, escapedCommand);
+        }
     }
 };

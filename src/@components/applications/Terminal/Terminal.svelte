@@ -30,26 +30,10 @@
     import { writable } from "svelte/store";
     import TerminalHeader from "./TerminalHeader.svelte";
     import { useContext } from "../../../lib/@composables";
+    import { onMount } from "svelte";
 
     const wFocused = writable(false);
-    const { currentEscaped, resultHistory } = useCommands(wFocused);
-
-    resultHistory.set([
-        [
-            `Help =><br/>
-&nbsp;&nbsp;• hello &#60;name&#62;<br/>
-&nbsp;&nbsp;• ls<br/>
-&nbsp;&nbsp;• ls -las<br/>
-&nbsp;&nbsp;• clear<br/>
-En appuillant une fois sur \'tab\', votre commande se completera automatiquement`
-        ]
-        // ['help =>'],
-        // [' • hello <name>'],
-        // [' • ls'],
-        // [' • ls -las'],
-        // [' • clear'],
-        // ['En appuillant une fois sur \'tab\', votre commande se completera automatiquement'],
-    ])
+    const { currentEscaped, resultHistory, setCommand, execute } = useCommands(wFocused);
 
     const promptContext = useContext('prompt', DefaultPrompt);
 
@@ -77,6 +61,11 @@ En appuillant une fois sur \'tab\', votre commande se completera automatiquement
         positionY: 400,
         logo
     };
+
+    onMount(() => {
+        setCommand('help');
+        execute();
+    })
 </script>
 
 <style scoped>
