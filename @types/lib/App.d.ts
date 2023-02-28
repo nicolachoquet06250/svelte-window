@@ -1,4 +1,5 @@
 type CustomWindow = {
+    id?: number,
     movable: boolean,
     resizable: boolean,
     content: ConstructorOfATypedSvelteComponent,
@@ -11,17 +12,17 @@ type CustomWindow = {
         '--title-color': string
     },
 
-    data: {
+    data: Partial<{
         title: string,
         width: number,
         height: number,
         positionX: number,
         positionY: number,
         rounded: boolean,
-        header?: ConstructorOfATypedSvelteComponent,
+        header: ConstructorOfATypedSvelteComponent,
         tidy: ConstructorOfATypedSvelteComponent,
         logo?: string
-    }
+    }>
 };
 
 type ApplicationWindow = {

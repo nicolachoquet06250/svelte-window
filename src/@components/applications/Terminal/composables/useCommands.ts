@@ -92,7 +92,6 @@ export const useCommands = (
                         .filter(i => i !== 'notFound')
                         .filter(v => v.startsWith(get(command)));
                     init(foundCommands.length === 1 ? foundCommands.pop() : get(command));
-                    console.log(foundCommands.length === 1 ? foundCommands.pop() : get(command));
                 },
                 () => {
                     console.log('double');

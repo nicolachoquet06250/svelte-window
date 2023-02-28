@@ -12,9 +12,8 @@ const matchRegex = (str: string, regex: RegExp): string[][] => {
         
         // The result can be accessed through the `m`-variable.
         const sarr = [];
-        m.forEach((match, groupIndex) => {
+        m.forEach((match) => {
             sarr.push(match);
-            // console.log(`Found match, group ${groupIndex}: ${match}`);
         });
         arr.push(sarr);
     }

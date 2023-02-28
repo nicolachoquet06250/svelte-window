@@ -34,7 +34,8 @@
         {/if}
 
         <button class:close
-                class:rounded>
+                class:rounded
+                on:click={handleClose}>
             x
         </button>
     </div>
@@ -84,6 +85,7 @@
         ($fullscreenContext = !$fullscreenContext);
 
     const handleTidy = () => dispatch('tidy');
+    const handleClose = () => dispatch('close');
 
     $readonly: headerHeight;
 </script>

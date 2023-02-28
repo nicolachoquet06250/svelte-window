@@ -1,4 +1,4 @@
-<WindowWrapper {resizable} {movable} {style} {data}>
+<WindowWrapper {resizable} {movable} {style} {data} {id}>
     <div>
         <h1>Application 1</h1>
 
@@ -15,6 +15,11 @@
     const resizable = true;
     const movable = true;
 
+    export let id: number = 0;
+
+    export let positionX = 200;
+    export let positionY = 200;
+
     const style = {
         '--border-color': 'black',
         '--header-bg-color': 'lightgray',
@@ -28,8 +33,7 @@
         header: MacOsHeader,
         rounded: true,
         tidy: DefaultTidyWindow,
-        positionX: 400,
-        positionY: 400
+        positionX, positionY
     };
 </script>
 

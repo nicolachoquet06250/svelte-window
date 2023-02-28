@@ -8,16 +8,14 @@
 </svelte:head>
 
 <main>
-  {#each windows as window}
-    {@const {content, specificWindow = null, ..._window} = window}
+  {#each $windows as window}
+    {@const {id = 0, content, specificWindow = null, ..._window} = window}
 
     {#if specificWindow}
-      <svelte:component 
-        this={specificWindow} />
+      <svelte:component this={specificWindow} {id} {...(_window.data ?? {})} />
     {:else}
-      <Window {..._window}>
-        <svelte:component 
-          this={content} />
+      <Window {..._window} {id}>
+        <svelte:component this={content} />
       </Window>
     {/if}
   {/each}
@@ -26,90 +24,23 @@
 <TaskBar />
 
 <script lang="ts">
-    import { WindowWrapper as Window, DefaultWindowContent, DefaultTidyWindow } from "./lib/@components";
+    import { WindowWrapper as Window } from "./lib/@components";
     import { TaskBar } from "./@components";
-    import { MacOsHeader } from "./@components/headers";
     import { Application1, Terminal } from "./@components/applications";
+    import { useOpenedWindows } from "./@composables";
 
-    const logo = '/vite.svg';
+    const { init, windows } = useOpenedWindows();
 
-    const windows: Windows = [
+    init([
       {
-        movable: true,
-        resizable: true,
-        content: DefaultWindowContent,
-
-        style: {
-          '--border-color': 'black',
-          '--header-bg-color': 'lightgray',
-          '--header-border-color': 'black',
-          '--header-border-size': '1px',
-          '--title-color': 'black',
-        },
-
+        specificWindow: Application1,
         data: {
-          title: 'Mon application rounded & movable & resizable',
-          width: 600,
-          height: 600,
-          positionX: 0,
-          positionY: 0,
-          rounded: false,
-          tidy: DefaultTidyWindow
+          positionX: 100,
+          positionY: 100
         }
-      },
-      {
-        movable: true,
-        resizable: false,
-        content: DefaultWindowContent,
-
-        style: {
-          '--border-color': 'black',
-          '--header-bg-color': 'lightgray',
-          '--header-border-color': 'black',
-          '--header-border-size': '1px',
-          '--title-color': 'black',
-        },
-
-        data: {
-          title: 'Mon application movable',
-          width: 600,
-          height: 600,
-          positionX: 200,
-          positionY: 200,
-          rounded: false,
-          logo,
-          tidy: DefaultTidyWindow
-        }
-      },
-      {
-        movable: true,
-        resizable: true,
-        content: DefaultWindowContent,
-
-        style: {
-          '--border-color': 'black',
-          '--header-bg-color': 'lightgray',
-          '--header-border-color': 'black',
-          '--header-border-size': '1px',
-          '--title-color': 'black',
-        },
-
-        data: {
-          title: 'Mon application rounded & movable & resizable reversed',
-          width: 600,
-          height: 600,
-          positionX: 0,
-          positionY: 500,
-          rounded: true,
-          header: MacOsHeader,
-          tidy: DefaultTidyWindow
-        }
-      },
-      {
-        specificWindow: Application1
       },
       {
         specificWindow: Terminal
       },
-    ];
+    ]);
 </script>

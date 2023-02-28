@@ -16,9 +16,10 @@
     let windowPosition: Point = { x: 0, y: 0 };
     let oldMousePosition: Point = { x: 0, y: 0 };
 
+    export let id: number = 0;
+
     useContext('movable', true);
     const inMoveContext = useContext('in-move', false);
-    const titleContext = useContext('title', '');
     const fullscreenContext = useContext('fullscreen', false);
     const windowPositionContext = useContext<Point>(
         'window-position', 
@@ -29,7 +30,7 @@
         { component: null, element: null }
     );
     
-    windowPositionContext.subscribe(v => {
+    windowPositionContext.subscribe((v: Point) => {
         if (v.y >= 0) {
             windowPosition = v;
         }
@@ -63,7 +64,7 @@
             });
             $inMoveContext = true;
 
-            focus($titleContext);
+            focus(id);
         }
     };
 

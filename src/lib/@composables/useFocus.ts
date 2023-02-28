@@ -1,13 +1,12 @@
 import { get, writable } from "svelte/store";
 
-export const windowList = writable<string[]>([]);
-export const focusedWindow = writable<string>();
+export const windowList = writable<number[]>([]);
 
-const focus = (title: string) => {
+const focus = (id: number) => {
     const oldWindowList = [ ...get(windowList) ];
     const newWindowList = [];
 
-    const currentIndex = get(windowList).indexOf(title);
+    const currentIndex = get(windowList).indexOf(id);
     const nextCurrentIndex = Array.from(
         oldWindowList.keys()
     ).reduce((r, c) => c > r ? c : r, 0);
@@ -23,17 +22,17 @@ const focus = (title: string) => {
     }
 
     // l'index à bouger
-    newWindowList.push(title);
+    newWindowList.push(id);
 
     windowList.set(newWindowList);
 };
 
-const prepareWindow = (title: string) => {
-    windowList.update(v => [...v, title])
+const prepareWindow = (id: number) => {
+    windowList.update(v => [...v, id])
 };
 
-const unprepareWindow = (title: string) => {
-    windowList.update(v => v.filter(_v => _v !== title));
+const unprepareWindow = (id: number) => {
+    windowList.update(v => v.filter(_v => _v !== id));
 };
 
 export const useFocus = () => ({

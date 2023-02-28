@@ -1,13 +1,15 @@
 <section 
     bind:this={$target}
 
+    out:scale
+
     class:window={true}
     class:rounded
     class:tidy={Object.values($tidyWindowList).map(v => v.data.title).includes(title)}
        
     style:--header-width={`${(windowWidth ?? 500)}px`}
     style:--window-position={windowPositionCss}
-    style:--z-index={$windowList.indexOf(title)}
+    style:--z-index={$windowList.indexOf(id)}
          
     style:left={windowPosition.x + 'px'}
     style:top={windowPosition.y + 'px'}
@@ -25,7 +27,8 @@
             {maxified} {title}
             {rounded} {stowable}
             resizable={$resizableContext} {logo}
-            on:tidy={handleTidy} />
+            on:tidy={handleTidy}
+            on:close={handleClose} />
     {/if}
     
     <main>
@@ -39,6 +42,8 @@
     import { useEventListener, writable } from "@svelte-use/core";
     import { useFocus, useTidyWindows, getContext, useContext } from "../../@composables";
     import WindowMainHeader from "./WindowMainHeader.svelte";
+    import { useOpenedWindows } from "../../../@composables";
+    import { scale } from "svelte/transition";
 
     const movableContext = useContext<boolean>('movable', false);
     const movableZoneElementContext = 
@@ -56,9 +61,10 @@
         focus, prepareWindow, 
         unprepareWindow, list: windowList
     } = useFocus();
+    const { remove } = useOpenedWindows();
     
     const target = writable<HTMLElement>();
-    useEventListener(target, 'click', () => focus(title));
+    useEventListener(target, 'click', () => focus(id));
 
     onMount(() => {
         $minSizeContext && ($minSizeContext = {
@@ -67,14 +73,15 @@
         });
         $titleContext = title;
         
-        prepareWindow(title);
+        prepareWindow(id);
 
         return () => {
-            unprepareWindow(title);
+            unprepareWindow(id);
         }
     });
 
     export let rounded = false;
+    export let id: number = 0;
 
     export let title = '';
 
@@ -114,7 +121,7 @@
 
     $: windowPositionCss = $resizableContext ? 'relative' : 'absolute';
 
-    $: focused = $windowList.indexOf(title) === $windowList.length - 1;
+    $: focused = $windowList.indexOf(id) === $windowList.length - 1;
 
     windowPositionContext?.subscribe(v => {
         !$resizableContext && (windowPosition.x = v.x);
@@ -133,6 +140,7 @@
     });
 
     const handleTidy = () => tidyWindow(tidy, { title, logo });
+    const handleClose = () => remove(id);
 
     $readonly: windowWidth;
     $readonly: windowHeight;

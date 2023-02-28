@@ -1,4 +1,4 @@
-<WindowWrapper {resizable} {movable} {style} {data} bind:focused>
+<WindowWrapper {resizable} {movable} {style} {data} {id} bind:focused>
     <main>
         {#each $resultHistory as item}
             <div class:response-item={true}>
@@ -45,6 +45,11 @@
     const resizable = true;
     const movable = true;
 
+    export let id: number = 0;
+
+    export let positionX = 400;
+    export let positionY = 400;
+
     let focused: boolean;
 
     $: $wFocused = focused;
@@ -62,8 +67,7 @@
         rounded: true,
         tidy: DefaultTidyWindow,
         header: TerminalHeader,
-        positionX: 400,
-        positionY: 400,
+        positionX, positionY,
         logo
     };
 

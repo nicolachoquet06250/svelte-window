@@ -2,7 +2,7 @@
         bind:this={element}
         style:cursor class:rounded>
     <div class:actions>
-        <button class:close />
+        <button class:close on:click={handleClose} />
 
         {#if maxified}
             <button class:minify />
@@ -57,6 +57,7 @@
         fullscreenContext.set(!get(fullscreenContext));
 
     const handleTidy = () => dispatch('tidy');
+    const handleClose = () => dispatch('close');
 
     $readonly: headerHeight;
 
