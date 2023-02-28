@@ -15,30 +15,32 @@
 
         <div class="custom-options">
             {#if Array.isArray(options)}
-                {#each options as key}
+                {#each options as value}
+                    {@const isSelected = selected === value}
+                    {@const content = value}
                     <span 
                         class="custom-option" 
-                        class:selected={selected === key}
+                        class:selected={isSelected}
                         data-value="toto"
-                        on:mousedown={() => selected = key}>
+                        on:mousedown={() => selected = value}>
                         <slot name="option" 
-                            value={key}
-                            content={options[key]}
-                            selected={selected === key}></slot>
+                            {value} {content}
+                            selected={isSelected}></slot>
                     </span>
                 {/each}
             {:else}
-                {#each Object.keys(options) as key}
+                {#each Object.keys(options) as value}
+                    {@const isSelected = selected === value}
+                    {@const content = options[value]}
                     <span 
                         class="custom-option" 
-                        class:selected={selected === key}
+                        class:selected={isSelected}
                         data-value="toto"
-                        on:mousedown={() => selected = key}>
+                        on:mousedown={() => selected = value}>
                         <slot name="option" 
-                            value={key}
-                            content={options[key]}
-                            selected={selected === key}>
-                            {options[key]}
+                            {value} {content}
+                            selected={isSelected}>
+                            {content}
                         </slot>
                     </span>
                 {/each}
@@ -123,7 +125,6 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        width: max-content;
         font-size: 20px;
         font-weight: 300;
         padding-left: 22px;
@@ -134,6 +135,14 @@
         border-style: solid;
         border-color: #394a6d;
         width: 100%;
+    }
+
+    .select__trigger > span {
+        display: inline-block;
+        width: calc(100% - 35px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .custom-options {
         position: absolute;
@@ -149,24 +158,29 @@
         visibility: hidden;
         pointer-events: none;
         z-index: 2;
+        width: 100%;
+    }
+    .rounded .custom-options {
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
     }
     .select.open .custom-options {
         opacity: 1;
         visibility: visible;
         pointer-events: all;
-        /* A améliorer */
-        width: calc(100% + 14px);
     }
     .custom-option {
         position: relative;
-        /* display: block; */
         display: inline-block;
-        /* padding: 0 22px 0 22px; */
         font-size: 22px;
         font-weight: 300;
         color: #3b3b3b;
         cursor: pointer;
         transition: all 0.5s;
+        padding-left: 5px;
+        padding-right: 5px;
+        box-sizing: border-box;
+        width: 100%;
     }
     .custom-option:hover {
         cursor: pointer;

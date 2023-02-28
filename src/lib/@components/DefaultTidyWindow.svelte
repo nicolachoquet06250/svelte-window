@@ -48,7 +48,6 @@
 
     div > span {
         display: inline-block;
-        /* width: 50px; */
         flex: 1;
         white-space: nowrap;
         overflow: hidden;

@@ -14,11 +14,11 @@
                 bind:selected 
                 options={[ 'tesla', 'volvo', 'mercedes' ]}>
             <svelte:fragment slot="selected" let:selected={selected}>
-                <svelte:component this={prompts[selected]} color='black' />
+                <svelte:component this={prompts[selected]} color='black' wrapped={true} />
             </svelte:fragment>
 
             <svelte:fragment slot="option" let:value={value} let:selected={selected}>
-                <svelte:component this={prompts[value]} color={selected ? 'white' : 'black'} />
+                <svelte:component this={prompts[value]} color={selected ? 'white' : 'black'} wrapped={true} />
             </svelte:fragment>
         </Dropdown>
     </div>
@@ -57,7 +57,7 @@
     import { createEventDispatcher } from "svelte";
     import { get_current_component, onMount } from "svelte/internal";
     import Dropdown from "../../../lib/@components/Dropdown.svelte";
-    import { useFocus, getContext } from "../../../lib/@composables";
+    import { useFocus, getContext, useContext } from "../../../lib/@composables";
     import DefaultPrompt from "./DefaultPrompt.svelte";
 
     const actions = true, 
@@ -78,6 +78,8 @@
 
     const component = get_current_component();
 
+    const promptContext = useContext('prompt', DefaultPrompt);
+
     export let headerHeight: number;
     export let logo: string | ConstructorOfATypedSvelteComponent;
     export let title: string;
@@ -89,6 +91,8 @@
 
     let element: HTMLElement = null;
     let selected = 'tesla';
+
+    $: $promptContext = prompts[selected];
     
     const movableZoneElementContext = getContext<
         MovableZoneElement

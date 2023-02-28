@@ -13,7 +13,7 @@
         {/each}
         <div>
             <svelte:component 
-                this={DefaultPrompt}
+                this={$promptContext}
                 color='black' />
                 <span>{@html $currentEscaped} </span>
                 <Cursor color='black' {focused} />
@@ -29,9 +29,12 @@
     import { useCommands } from "./composables";
     import { writable } from "svelte/store";
     import TerminalHeader from "./TerminalHeader.svelte";
+    import { useContext } from "../../../lib/@composables";
 
     const wFocused = writable(false);
     const { currentEscaped, resultHistory } = useCommands(wFocused);
+
+    const promptContext = useContext('prompt', DefaultPrompt);
 
     const resizable = true;
     const movable = true;
