@@ -6,6 +6,7 @@ export const match = createCommandMatcher(command => get<string>(command).trim()
 export default createCommand((command, result, _, manualy) => {
     result.set([
         `Help =>`,
+        `&nbsp;&nbsp;• help &#60;name&#62;`,
         `&nbsp;&nbsp;• hello &#60;name&#62;`,
         `&nbsp;&nbsp;• ls`,
         `&nbsp;&nbsp;• ls -las`,
