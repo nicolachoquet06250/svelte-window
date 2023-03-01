@@ -10,7 +10,7 @@
 
 <script lang="ts">
     import { DefaultTidyWindow, WindowWrapper } from "../../../lib/@components";
-  import { useWindowProps, useWindowStyle } from "../../../lib/@composables";
+    import { useWindowProps, useWindowStyle } from "../../../lib/@composables";
     import { MacOsHeader } from "../../headers";
 
     const resizable = true;

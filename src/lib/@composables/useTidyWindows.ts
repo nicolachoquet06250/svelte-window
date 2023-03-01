@@ -1,8 +1,8 @@
 import { get, writable } from "svelte/store";
-import {v4 as uuidv4} from 'uuid';
+// import {v4 as uuidv4} from 'uuid';
 
 const tidyWindowList = writable<
-    Record<string, {
+    Record<number, {
         component: ConstructorOfATypedSvelteComponent,
         data: Partial<{
             title: string,
@@ -12,10 +12,11 @@ const tidyWindowList = writable<
 >({});
 
 const tidy = (
+    id: number,
     tidyWindow: ConstructorOfATypedSvelteComponent, 
     data: Record<string, any>
 ) => {
-    const id = uuidv4();
+    // const id = uuidv4();
     tidyWindowList.update(v => ({
         ...v, 
         [id]: {
@@ -23,18 +24,20 @@ const tidy = (
             data
         }
     }));
-    return id;
+    // return id;
 };
-const upset = (id: string) => {
-    tidyWindowList.update(v => Object.keys(v).filter(_v => _v !== id).reduce((r, c) => ({
-        ...r,
-        [c]: v[c]
-    }), {}));
+const upset = (id: number) => {
+    tidyWindowList.update(v => {
+        const keys = Object.keys(v).map(_v => parseInt(_v));
+        return keys.filter(_v => _v !== id).reduce((r, c) => ({
+            ...r,
+            [c]: v[c]
+        }), {})
+    });
 };
 
-export const useTidyWindows = (id?: string) => ({
-    tidy,
-    upset,
+export const useTidyWindows = (id?: number) => ({
+    tidy, upset,
     list: tidyWindowList,
     current: (id ? get(tidyWindowList)[id] : undefined)
 });

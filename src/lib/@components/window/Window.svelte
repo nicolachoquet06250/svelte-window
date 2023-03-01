@@ -5,7 +5,7 @@
 
     class:window={true}
     class:rounded
-    class:tidy={Object.values($tidyWindowList).map(v => v.data.title).includes(title)}
+    class:tidy={isTidy}
        
     style:--header-width={`${(windowWidth ?? 500)}px`}
     style:--window-position={windowPositionCss}
@@ -17,6 +17,8 @@
     style:height={_height}
     style:min-width={_minWidth} 
     style:min-height={_minHeight}
+
+    data-id={id}
 
     bind:offsetWidth={windowWidth}
     bind:offsetHeight={windowHeight}>
@@ -140,7 +142,9 @@
         element: $movableZoneElementContext.element
     });
 
-    const handleTidy = () => tidyWindow(tidy, { title, logo });
+    $: isTidy = Object.keys($tidyWindowList).map(id => parseInt(id)).includes(id);
+
+    const handleTidy = () => tidyWindow(id, tidy, { title, logo });
     const handleClose = () => remove(id);
 
     $readonly: windowWidth;

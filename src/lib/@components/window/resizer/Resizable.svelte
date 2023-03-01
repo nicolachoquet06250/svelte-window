@@ -1,6 +1,6 @@
 <div class:resizable={true}
      class:fullscreen={$fullscreenContext}
-     class:tidy={Object.values($tidyWindowList).map(v => v.data.title).includes($titleContext)}
+     class:tidy={isTidy}
 
      style:--z-index={$windowList.indexOf(id)}
 
@@ -81,6 +81,8 @@
     // computed & subscribes
     $: width = saveSize('width');
     $: height = saveSize('height');
+
+    $: isTidy = Object.keys($tidyWindowList).map(id => parseInt(id)).includes(id);
 
     $: unsubscribe = windowSizeContext?.subscribe(v => {
         v.width && v.height && (() => {

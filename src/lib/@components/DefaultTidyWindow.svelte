@@ -15,7 +15,7 @@
 
     const dispatch = createEventDispatcher();
 
-    export let id: string;
+    export let id: number;
 
     const { current } = useTidyWindows(id); 
 
@@ -37,6 +37,7 @@
         display: flex;
         align-items: center;
         cursor: pointer;
+        background-color: white;
     }
 
     div > img {

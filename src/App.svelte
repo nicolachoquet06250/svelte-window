@@ -42,5 +42,19 @@
       {
         specificWindow: Terminal
       },
+      {
+        specificWindow: Terminal,
+        data: {
+          positionX: 150,
+          positionY: 150
+        }
+      },
+      {
+        specificWindow: Terminal,
+        data: {
+          positionX: 300,
+          positionY: 300
+        }
+      },
     ]);
 </script>
