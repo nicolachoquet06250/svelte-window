@@ -124,7 +124,7 @@
 
     $: focused = $windowList.indexOf(id) === $windowList.length - 1;
 
-    windowPositionContext?.subscribe(v => {
+    windowPositionContext?.subscribe((v: Point) => {
         !$resizableContext && (windowPosition.x = v.x);
         !$resizableContext && (windowPosition.y = v.y);
     });

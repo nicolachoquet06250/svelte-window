@@ -34,7 +34,7 @@
     import { useCommands } from "./composables";
     import { writable } from "svelte/store";
     import TerminalHeader from "./TerminalHeader.svelte";
-    import { useContext } from "../../../lib/@composables";
+    import { useContext, useWindowProps, useWindowStyle } from "../../../lib/@composables";
     import { onMount } from "svelte";
 
     const wFocused = writable(false);
@@ -54,22 +54,22 @@
 
     $: $wFocused = focused;
 
-    const style = {
-        '--border-color': 'black',
-        '--header-bg-color': 'lightgray',
-        '--header-border-color': 'black',
-        '--header-border-size': '1px',
-        '--title-color': 'black',
-    };
+    const style = useWindowStyle({
+        border_color: 'black',
+        header_bg_color: 'lightgray',
+        header_border_color: 'black',
+        header_border_size: '1px',
+        title_color: 'black',
+    });
 
-    const data: WindowProps = {
+    const data = useWindowProps({
         title: 'Terminal',
         rounded: true,
         tidy: DefaultTidyWindow,
         header: TerminalHeader,
         positionX, positionY,
         logo
-    };
+    });
 
     onMount(() => {
         setCommand('help');

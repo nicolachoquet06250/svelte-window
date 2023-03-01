@@ -26,13 +26,25 @@ declare type WindowProps = Partial<{
     tidy: ConstructorOfATypedSvelteComponent
 }>;
 
-declare type WindowCssVars = Partial<
-    Record<
-        '--bg-color' | 
-        '--border-color' | 
-        '--border-size' | 
-        '--title-color' | 
-        '--window-position', 
-        string
-    >
->;
+type CaseToCase<
+    String extends string, 
+    Separator1 extends string = '_', 
+    Separator2 extends string = '-'
+> = String extends `${infer T}${Separator1}${infer U}`
+        ? `${T}${Separator2}${CaseToCase<U, Separator1, Separator2>}`
+            : String;
+
+declare type WindowCss = Partial<{
+    header_bg_color: string,
+    header_border_color: string,
+    header_border_size: string,
+    bg_color: string,
+    border_color: string,
+    border_size: string,
+    title_color: string,
+    window_position: string
+}>;
+
+declare type WindowCssVars = Partial<{
+    [K in CaseToCase<`--${keyof WindowCss}`>]: WindowCss[keyof WindowCss]
+}>;
