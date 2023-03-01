@@ -1,0 +1,1 @@
+export const useWindowProps: (data: WindowProps) => WindowProps = data => data;
