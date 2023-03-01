@@ -37,10 +37,10 @@ type CaseToCase<
 declare type WindowCss = Partial<{
     header_bg_color: string,
     header_border_color: string,
-    header_border_size: string,
+    header_border_size: `${number}px`,
     bg_color: string,
     border_color: string,
-    border_size: string,
+    border_size: `${number}px`,
     title_color: string,
     window_position: string
 }>;
