@@ -2,7 +2,7 @@
      class:fullscreen={$fullscreenContext}
      class:tidy={Object.values($tidyWindowList).map(v => v.data.title).includes($titleContext)}
 
-     style:--z-index={$windowList.indexOf($titleContext)}
+     style:--z-index={$windowList.indexOf(id)}
 
      style:min-width={$minSizeContext.width + 'px'}
      style:min-height={$minSizeContext.height + 'px'}
@@ -41,6 +41,8 @@
     let tmpSize: BoxSize = { width: 0, height: 0 };
     let clickPosition: Point = { x: 0, y: 0 };
     let clickedSize: Partial<BoxSize> = {};
+
+    export let id: number = 0;
 
     // set des contextes
     useContext('resizable', true);

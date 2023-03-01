@@ -72,7 +72,7 @@
 <style scoped>
     .resizer {
         background-color: transparent;
-        /* background-color: red; */
+        background-color: red;
         position: absolute;
         box-sizing: border-box;
         border: none;

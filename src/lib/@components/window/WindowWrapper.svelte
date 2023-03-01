@@ -1,6 +1,6 @@
 {#if resizable && movable}
     <Movable {id}>
-        <Resizable>
+        <Resizable {id}>
             <Window 
                 --border-color={style["--border-color"]}
                 --header-bg-color={style["--header-bg-color"]}
@@ -14,7 +14,7 @@
         </Resizable>
     </Movable>
 {:else if resizable}
-    <Resizable>
+    <Resizable {id}>
         <Window 
             --border-color={style["--border-color"]}
             --header-bg-color={style["--header-bg-color"]}
@@ -27,7 +27,7 @@
         </Window>
     </Resizable>
 {:else if movable}
-    <Movable>
+    <Movable {id}>
         <Window 
             --border-color={style["--border-color"]}
             --header-bg-color={style["--header-bg-color"]}
