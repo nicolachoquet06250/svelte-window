@@ -8,7 +8,7 @@
 </svelte:head>
 
 <main>
-  {#each $windows as window}
+  {#each $windows as window (window.id)}
     {@const {id = 0, content, specificWindow = null, ..._window} = window}
 
     {#if specificWindow}
