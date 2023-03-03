@@ -1,63 +1,114 @@
-<section 
-    bind:this={$target}
+{#if $resizableContext || !closing}
+    <section 
+        bind:this={$target}
 
-    out:scale
+        class:window={true}
+        class:rounded
+        class:tidy={isTidy}
 
-    class:window={true}
-    class:rounded
-    class:tidy={isTidy}
-       
-    style:--header-width={`${(windowWidth ?? 500)}px`}
-    style:--window-position={windowPositionCss}
-    style:--z-index={$windowList.indexOf(id)}
-         
-    style:left={windowPosition.x + 'px'}
-    style:top={windowPosition.y + 'px'}
-    style:width={_width} 
-    style:height={_height}
-    style:min-width={_minWidth} 
-    style:min-height={_minHeight}
+        {style}
 
-    data-id={id}
+        style:--window-position={windowPositionCss}
+        style:--z-index={$windowList.indexOf(id)}
+            
+        style:left={windowPosition.x + 'px'}
+        style:top={windowPosition.y + 'px'}
+        style:width={_width} 
+        style:height={_height}
 
-    bind:offsetWidth={windowWidth}
-    bind:offsetHeight={windowHeight}>
-    {#if header}
-        <svelte:component 
-            this={header}
-            {headerHeight}
-            {maxified} {title}
-            {rounded} {stowable}
-            resizable={$resizableContext} 
-            {logo} {id}
-            on:tidy={handleTidy}
-            on:close={handleClose} />
-    {/if}
-    
-    <main>
-        <slot />
-    </main>
-</section>
+        data-id={id}
+
+        bind:offsetWidth={windowWidth}
+        bind:offsetHeight={windowHeight}
+
+        data-resizable={$resizableContext}>
+        {#if header}
+            <svelte:component 
+                this={header}
+                {headerHeight}
+                {maxified} {title}
+                {rounded} {stowable}
+                resizable={$resizableContext} 
+                {logo} {id}
+                on:tidy={handleTidy}
+                on:close={handleClose}
+            />
+        {/if}
+
+        <main>
+            <slot />
+        </main>
+    </section>
+{:else}
+    <div class:closing-container={closing}
+         style:width={`${windowWidth}px`} 
+         style:height={`${windowHeight}px`}
+         style:left={windowPosition.x + 'px'}
+         style:top={windowPosition.y + 'px'}
+         out:scale>
+        <section 
+            bind:this={$target}
+
+            class:window={true}
+            class:rounded
+            class:tidy={isTidy}
+
+            {style}
+
+            style:--window-position={windowPositionCss}
+            style:--z-index={$windowList.indexOf(id)}
+                
+            style:left={windowPosition.x + 'px'}
+            style:top={windowPosition.y + 'px'}
+            style:width={_width} 
+            style:height={_height}
+
+            data-id={id}
+
+            bind:offsetWidth={windowWidth}
+            bind:offsetHeight={windowHeight}
+
+            data-resizable={$resizableContext}>
+            {#if header}
+                <svelte:component 
+                    this={header}
+                    {headerHeight}
+                    {maxified} {title}
+                    {rounded} {stowable}
+                    resizable={$resizableContext} 
+                    {logo} {id}
+                    on:tidy={handleTidy}
+                    on:close={handleClose}
+                />
+            {/if}
+            
+            <main>
+                <slot />
+            </main>
+        </section>
+    </div>
+{/if}
 
 <script lang='ts'>
     import { onMount } from "svelte";
     import defaultLogo from '../../../assets/svelte.svg';
     import { useEventListener, writable } from "@svelte-use/core";
-    import { useFocus, useTidyWindows, getContext, useContext } from "../../@composables";
+    import { useFocus, useTidyWindows, useContext } from "../../@composables";
     import WindowMainHeader from "./WindowMainHeader.svelte";
     import { useOpenedWindows } from "../../../@composables";
     import { scale } from "svelte/transition";
 
     const movableContext = useContext<boolean>('movable', false);
     const movableZoneElementContext = 
-        getContext<MovableZoneElement>(
-            'movable-zone-element'
+        useContext<MovableZoneElement>(
+            'movable-zone-element',
+            { component: null, element: null }
         );
-    const windowPositionContext = getContext<Point>('window-position');
+    const windowPositionContext = useContext<Point>('window-position', { x: 0, y: 0 });
     const resizableContext = useContext<boolean>('resizable', false);
-    const windowSizeContext = getContext<BoxSize>('window-size');
-    const minSizeContext = getContext<BoxSize>('min-size');
-    const titleContext = getContext<string>('title');
+    const windowSizeContext = useContext<BoxSize>('window-size', { width: 0, height: 0 });
+    const minSizeContext = useContext<BoxSize>('min-size', { width: 0, height: 0 });
+    const titleContext = useContext<string>('title', '');
 
     const { list: tidyWindowList, tidy: tidyWindow } = useTidyWindows();
     const { 
@@ -86,16 +137,13 @@
     export let rounded = false;
     export let id: number = 0;
 
-    export let title = '';
+    export let title: string = '';
 
     export let width: number = null;
     export let height: number = null;
 
     export let positionX: number = null;
     export let positionY: number = null;
-
-    export let minWidth: number = null;
-    export let minHeight: number = null;
 
     export let windowWidth: number = 0;
     export let windowHeight: number = 0;
@@ -106,18 +154,19 @@
     export let logo: string | ConstructorOfATypedSvelteComponent = defaultLogo;
 
     export let focused: boolean = false;
+
+    export let style: string = '';
     
     let maxified = false;
     let headerHeight: number;
     let windowPosition: Point = { x: 0, y: 0 };
 
+    let closing: boolean = false;
+
     $: stowable = tidy !== null;
 
     $: _width = $resizableContext ? '100%' : (width ?? 0) + 'px';
     $: _height = $resizableContext ? '100%' : (height ?? 0) + 'px';
-
-    $: _minWidth = $resizableContext ? null : (minWidth ?? 0) + 'px';
-    $: _minHeight = $resizableContext ?  null : (minHeight ?? 0) + 'px';
 
     $: windowPosition.x = $movableContext ? 0 : positionX;
     $: windowPosition.y = $movableContext ? 0 : positionY;
@@ -145,7 +194,12 @@
     $: isTidy = Object.keys($tidyWindowList).map(id => parseInt(id)).includes(id);
 
     const handleTidy = () => tidyWindow(id, tidy, { title, logo });
-    const handleClose = () => remove(id);
+    const handleClose = () => {
+        closing = true;
+        setTimeout(() => {
+            remove(id);
+        }, 0);
+    }
 
     $readonly: windowWidth;
     $readonly: windowHeight;
@@ -163,6 +217,17 @@
         --window-position: absolute;
     }
 
+    .closing-container {
+        position: absolute;
+        z-index: 9999;
+    }
+
+    .closing-container > section.window {
+        position: absolute;
+        top: 0!important;
+        left: 0!important;
+    }
+
     section.window {
         min-width: 500px;
         min-height: 500px;
@@ -175,7 +240,6 @@
 
         border-color: var(--border-color);
         border-width: var(--border-size);
-        background-color: var(--bg-color);
 
         -webkit-box-shadow: 3px 2px 12px 1px rgba(0,0,0,0.87); 
         box-shadow: 3px 2px 12px 1px rgba(0,0,0,0.87);
@@ -196,5 +260,6 @@
         right: 0;
         bottom: 0;
         top: 40px;
+        background-color: var(--bg-color);
     }
 </style>

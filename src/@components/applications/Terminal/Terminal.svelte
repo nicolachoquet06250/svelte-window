@@ -1,4 +1,4 @@
-<WindowWrapper {resizable} {movable} {style} {data} {id} bind:focused>
+<WindowWrapper {resizable} {movable} style={_style} {data} {id} bind:focused>
     <main>
         {#each $resultHistory as item}
             <div class:response-item={true}>
@@ -42,8 +42,8 @@
 
     const promptContext = useContext('prompt', DefaultPrompt);
 
-    const resizable = true;
     const movable = true;
+    export let resizable: boolean = false;
 
     export let id: number = 0;
 
@@ -54,12 +54,15 @@
 
     $: $wFocused = focused;
 
-    const style = useWindowStyle({
+    export let style: WindowCss = {};
+
+    const _style = useWindowStyle({
         border_color: 'black',
         header_bg_color: 'lightgray',
         header_border_color: 'black',
         header_border_size: '1px',
         title_color: 'black',
+        ...style
     });
 
     const data = useWindowProps({

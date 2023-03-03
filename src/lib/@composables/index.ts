@@ -3,3 +3,4 @@ export * from './useFocus';
 export * from './useContext';
 export * from './useWindowProps';
 export * from './useWindowStyle';
+export * from './useContextMenu';

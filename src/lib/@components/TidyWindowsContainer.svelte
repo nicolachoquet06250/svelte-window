@@ -11,16 +11,17 @@
 {/each}
 
 <script lang="ts">
-    import { useTidyWindows } from "../@composables";
+    import { useFocus, useTidyWindows } from "../@composables";
 
     const { list, upset } = useTidyWindows();
+    const { focus } = useFocus();
     let groupedList: {
       [title: string]: {
         component: ConstructorOfATypedSvelteComponent,
         data: Record<string, any>,
         id: number
       }[]
-    }
+    };
 
     $: groupedList = Object.entries($list).reduce((r, [id, detail]) => {
       return {
@@ -35,9 +36,10 @@
       };
     }, {});
 
-    $: console.log(groupedList);
-
-    const handleUpset = (id: string) => () => upset(parseInt(id));
+    const handleUpset = (id: string) => () => {
+      upset(parseInt(id));
+      focus(parseInt(id));
+    };
 </script>
 
 <style scoped>

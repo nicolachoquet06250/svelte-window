@@ -9,14 +9,13 @@
 
 <main>
   {#each $windows as window (window.id)}
-    {@const {id = 0, content, specificWindow = null, ..._window} = window}
+    {@const {id = 0, specificWindow = null, style = {}, data = {}, ..._window} = window}
 
     {#if specificWindow}
-      <svelte:component this={specificWindow} {id} {...(_window.data ?? {})} />
-    {:else}
-      <Window {..._window} {id}>
-        <svelte:component this={content} />
-      </Window>
+      <svelte:component 
+        this={specificWindow} {id} 
+        {...data} {style}
+      />
     {/if}
   {/each}
 </main>
@@ -24,7 +23,6 @@
 <TaskBar />
 
 <script lang="ts">
-    import { WindowWrapper as Window } from "./lib/@components";
     import { TaskBar } from "./@components";
     import { Application1, Terminal } from "./@components/applications";
     import { useOpenedWindows } from "./@composables";
@@ -36,7 +34,7 @@
         specificWindow: Application1,
         data: {
           positionX: 100,
-          positionY: 100
+          positionY: 101
         }
       },
       {
@@ -46,7 +44,8 @@
         specificWindow: Terminal,
         data: {
           positionX: 150,
-          positionY: 150
+          positionY: 150,
+          resizable: true
         }
       },
       {

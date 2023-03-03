@@ -127,14 +127,13 @@
         --header-border-color: white;
         --header-border-size: 1px;
         --header-height: 40px;
-        --header-width: 0px;
     }
 
     header {
         height: var(--header-height);
         position: absolute;
         top: 0;
-        width: calc(var(--header-width) - 2px);
+        width: 100%;
         box-sizing: border-box;
 
         display: flex;

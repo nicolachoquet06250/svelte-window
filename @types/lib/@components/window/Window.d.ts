@@ -11,14 +11,13 @@ declare type HeaderEvents = {};
 declare type HeaderComponent = SvelteComponentTyped<HeaderProps, HeaderEvents, {}>;
 
 declare type WindowProps = Partial<{
+    resizable: boolean,
     rounded: boolean,
     title: string,
     width: number,
     height: number,
     positionX: number,
     positionY: number,
-    minWidth: number,
-    minHeight: number,
     windowWidth: number,
     windowHeight: number,
     logo: string | ConstructorOfATypedSvelteComponent,

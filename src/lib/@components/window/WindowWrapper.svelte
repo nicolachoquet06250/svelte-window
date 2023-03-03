@@ -2,11 +2,7 @@
     <Movable {id}>
         <Resizable {id}>
             <Window 
-                --border-color={style["--border-color"]}
-                --header-bg-color={style["--header-bg-color"]}
-                --header-border-color={style["--header-border-color"]}
-                --header-border-size={style["--header-border-size"]}
-                --title-color={style["--title-color"]}
+                style={bindedStyle}
                 bind:focused
                 {...data} {id}>
                 <slot />
@@ -16,11 +12,7 @@
 {:else if resizable}
     <Resizable {id}>
         <Window 
-            --border-color={style["--border-color"]}
-            --header-bg-color={style["--header-bg-color"]}
-            --header-border-color={style["--header-border-color"]}
-            --header-border-size={style["--header-border-size"]}
-            --title-color={style["--title-color"]}
+            style={bindedStyle}
             bind:focused
             {...data} {id}>
             <slot />
@@ -29,11 +21,7 @@
 {:else if movable}
     <Movable {id}>
         <Window 
-            --border-color={style["--border-color"]}
-            --header-bg-color={style["--header-bg-color"]}
-            --header-border-color={style["--header-border-color"]}
-            --header-border-size={style["--header-border-size"]}
-            --title-color={style["--title-color"]}
+            style={bindedStyle}
             bind:focused
             {...data} {id}>
             <slot />
@@ -41,11 +29,7 @@
     </Movable>
 {:else}
     <Window 
-        --border-color={style["--border-color"]}
-        --header-bg-color={style["--header-bg-color"]}
-        --header-border-color={style["--header-border-color"]}
-        --header-border-size={style["--header-border-size"]}
-        --title-color={style["--title-color"]}
+        style={bindedStyle}
         bind:focused
         {...data} {id}>
         <slot />
@@ -65,6 +49,8 @@
     export let focused: boolean = false;
 
     export let id: number = 0;
+
+    $: bindedStyle = Object.keys(style).map(k => `${k}: ${style[k]}`).join('; ');
 
     $readonly: focused;
 </script>

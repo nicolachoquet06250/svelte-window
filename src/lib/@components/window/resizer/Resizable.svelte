@@ -10,7 +10,9 @@
      style:width style:height
 
      style:--position-x={$windowPositionContext.x + 'px'}
-     style:--position-y={$windowPositionContext.y + 'px'}>
+     style:--position-y={$windowPositionContext.y + 'px'}
+
+     out:scale>
     <slot />
 
     <ResizerGroup 
@@ -23,6 +25,7 @@
 
 <script lang='ts'>
     import { onMount } from "svelte";
+    import { scale } from "svelte/transition";
     import ResizerGroup from "./WindowResizerGroup.svelte";
     import { useFocus, useTidyWindows, useContext } from "../../../@composables";
 
@@ -218,5 +221,9 @@
             bottom .2s linear, 
             left .2s linear, 
             right .2s linear;
+    }
+
+    .resizable.fullscreen > :global(section.window) {
+        width: 100%;
     }
 </style>

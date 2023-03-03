@@ -4,25 +4,9 @@ type CustomWindow = {
     resizable: boolean,
     content: ConstructorOfATypedSvelteComponent,
     
-    style: {
-        '--border-color': string,
-        '--header-bg-color': string,
-        '--header-border-color': string,
-        '--header-border-size': `${number}px`,
-        '--title-color': string
-    },
+    style: WindowCss,
 
-    data: Partial<{
-        title: string,
-        width: number,
-        height: number,
-        positionX: number,
-        positionY: number,
-        rounded: boolean,
-        header: ConstructorOfATypedSvelteComponent,
-        tidy: ConstructorOfATypedSvelteComponent,
-        logo?: string
-    }>
+    data: WindowProps
 };
 
 type ApplicationWindow = {

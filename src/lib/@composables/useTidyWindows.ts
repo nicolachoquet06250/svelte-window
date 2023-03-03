@@ -1,5 +1,4 @@
 import { get, writable } from "svelte/store";
-// import {v4 as uuidv4} from 'uuid';
 
 const tidyWindowList = writable<
     Record<number, {
@@ -16,7 +15,6 @@ const tidy = (
     tidyWindow: ConstructorOfATypedSvelteComponent, 
     data: Record<string, any>
 ) => {
-    // const id = uuidv4();
     tidyWindowList.update(v => ({
         ...v, 
         [id]: {
@@ -24,8 +22,8 @@ const tidy = (
             data
         }
     }));
-    // return id;
 };
+
 const upset = (id: number) => {
     tidyWindowList.update(v => {
         const keys = Object.keys(v).map(_v => parseInt(_v));
