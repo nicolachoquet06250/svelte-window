@@ -245,6 +245,10 @@
         box-shadow: 3px 2px 12px 1px rgba(0,0,0,0.87);
     }
 
+    section.window[data-resizable="true"] {
+        width: 100%;
+    }
+
     section.window.tidy {
         display: none;
     }
