@@ -11,13 +11,3 @@ declare module '@svelte/window' {
         value?: string | true
     ) => string[]|string[][];
 }
-
-declare type FormatTree = (
-    system: WReadable<ParsedItem[]>
-) => string[]
-declare type GetFlag = (
-    command: CommandStore
-) => Record<`-${string}`, string | true>;
-declare type SetFlagCb = (
-    value?: string | true
-) => string[]|string[][];
