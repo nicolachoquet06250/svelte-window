@@ -1,6 +1,12 @@
+import type { 
+    ContextMenuActionOptions, 
+    ContextMenuItems, 
+    ContextMenuState, 
+    WindowCssVars, 
+    WindowProps 
+} from "svelte-window";
 import { get, writable } from "svelte/store";
 import { get_current_component, onMount, SvelteComponentDev } from "svelte/internal"
-import type { ContextMenuActionOptions, ContextMenuItems, ContextMenuState, WindowCssVars, WindowProps } from "@svelte/window";
 
 export const useContextMenu = (items: ContextMenuItems) => {
     const contextMenuState: ContextMenuState = writable(false);

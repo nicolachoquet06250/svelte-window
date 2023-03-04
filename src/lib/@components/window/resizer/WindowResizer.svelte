@@ -10,7 +10,7 @@
                 on:mousemove={handleMouseMove} />
 
 <script lang='ts'>
-    import type { AvailableSide, Point } from "@svelte/window";
+    import type { AvailableSide, Point } from "svelte-window";
     import { createEventDispatcher } from "svelte";
     import { getContext } from "../../../@composables";
 

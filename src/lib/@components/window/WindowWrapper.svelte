@@ -37,7 +37,7 @@
 {/if}
 
 <script lang="ts">
-    import type { WindowCssVars, WindowProps } from "@svelte/window";
+    import type { WindowCssVars, WindowProps } from "svelte-window";
     import Movable from "./Movable.svelte";
     import { Resizable } from "./resizer";
     import Window from "./Window.svelte";

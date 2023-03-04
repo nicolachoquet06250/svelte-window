@@ -1,4 +1,10 @@
-import type { CommandStore, EscapedCommandStore, ResetFunc } from "@svelte/window";
+import type { 
+    CommandStore, 
+    EscapedCommandStore, 
+    ResetFunc, 
+    ArrayStore, 
+    MatrixStore 
+} from "svelte-window";
 import { get } from "svelte/store";
 import routes from "./routing/routes";
 

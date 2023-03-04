@@ -1,9 +1,9 @@
+import type { ParsedItem } from "svelte-window";
 import { get } from "svelte/store";
 import { useSystem } from "../../../../@composables";
 import { createCommand, createCommandMatcher } from "../createCommand";
 import { executeFlags, setFlag, setWithoutFlag } from "../createCommandFlags";
 import { mounths } from "../../../../lib/@tools/date";
-import type { ParsedItem } from "@svelte/window";
 
 export const match = createCommandMatcher(({ command }) => 
     get<string>(command).startsWith('ls'));
@@ -53,7 +53,7 @@ export default createCommand(({ command, result }) => {
             }).join(' ').replaceAll(/ /g, '&nbsp;')
     ]);
 
-    result.set(executeFlags(command));
+    result.set(executeFlags(command) as string[]);
 
     return true;
 });

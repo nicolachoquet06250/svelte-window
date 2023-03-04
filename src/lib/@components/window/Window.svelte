@@ -90,6 +90,7 @@
 {/if}
 
 <script lang='ts'>
+    import type { BoxSize, MovableZoneElement, Point } from "svelte-window";
     import { onMount } from "svelte";
     import defaultLogo from '../../../assets/svelte.svg';
     import { useEventListener, writable } from "@svelte-use/core";
@@ -97,7 +98,6 @@
     import WindowMainHeader from "./WindowMainHeader.svelte";
     import { useOpenedWindows } from "../../../@composables";
     import { scale } from "svelte/transition";
-    import type { BoxSize, MovableZoneElement, Point } from "@svelte/window";
 
     const movableContext = useContext<boolean>('movable', false);
     const movableZoneElementContext = 

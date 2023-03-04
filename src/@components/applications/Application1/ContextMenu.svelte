@@ -36,7 +36,7 @@
 <svelte:window on:keypress={handleKeypress} />
 
 <script lang="ts">
-    import type { ContextMenuAction, ContextMenuItems } from "@svelte/window";
+    import type { ContextMenuAction, ContextMenuItems } from "svelte-window";
     import { createEventDispatcher } from "svelte";
     import { fade } from "svelte/transition";
 

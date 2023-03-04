@@ -1,5 +1,14 @@
+import type { 
+    CommandStore, 
+    FocusedStore, 
+    ManualMiddleware, 
+    Middleware, 
+    ResetFunc, 
+    Return, 
+    SetFunc, 
+    UCFirst 
+} from "svelte-window";
 import { useEventListener } from "@svelte-use/core";
-import type { CommandStore, FocusedStore, ManualMiddleware, Middleware, ResetFunc, Return, SetFunc, UCFirst } from "@svelte/window";
 import { derived, get, writable } from "svelte/store";
 
 /* Définition de l'enum */

@@ -23,8 +23,8 @@
 </header>
 
 <script lang='ts'>
+    import type { CSSCursor, MovableZoneElement } from "svelte-window";
     import { useEventListener } from "@svelte-use/core";
-    import type { CSSCursor, MovableZoneElement } from "@svelte/window";
     import { createEventDispatcher } from "svelte";
     import { get_current_component, onMount } from "svelte/internal";
     import { get } from "svelte/store";

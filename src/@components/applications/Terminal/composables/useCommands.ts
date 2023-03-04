@@ -1,10 +1,16 @@
+import type { 
+    CommandStore, 
+    EscapedCommandStore, 
+    FocusedStore, 
+    ManualMiddleware, 
+    Middleware 
+} from "svelte-window";
 import { useEventListener } from "@svelte-use/core";
 import { derived, get, writable } from "svelte/store";
 import { useWrite, WRITE_MODE } from "./useWrite";
 import commandMatcher from "../commands";
 import { useKeyPress } from "../../../../lib/@tools/events/dblkeypress";
 import routes from "../commands/routing/routes";
-import type { CommandStore, EscapedCommandStore, FocusedStore, ManualMiddleware, Middleware } from "@svelte/window";
 
 export const useCommands = (
     focused: FocusedStore, 

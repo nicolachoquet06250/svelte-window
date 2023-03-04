@@ -27,6 +27,7 @@
 </WindowWrapper>
 
 <script lang="ts">
+    import type { WindowCss } from "svelte-window";
     import { DefaultTidyWindow, WindowWrapper } from "../../../lib/@components";
     import logo from "./Logo.svelte";
     import Cursor from "./Cursor.svelte";
@@ -36,7 +37,6 @@
     import { writable } from "svelte/store";
     import { useContext, useWindowProps, useWindowStyle } from "../../../lib/@composables";
     import { onMount } from "svelte";
-    import type { WindowCss } from "@svelte/window";
 
     const wFocused = writable(false);
     const { currentEscaped, resultHistory, setCommand, execute } = useCommands(wFocused);
