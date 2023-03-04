@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "main": "index.ts",
-  "types": "@types/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
