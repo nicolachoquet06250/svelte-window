@@ -36,6 +36,7 @@
     import { writable } from "svelte/store";
     import { useContext, useWindowProps, useWindowStyle } from "../../../lib/@composables";
     import { onMount } from "svelte";
+    import type { WindowCss } from "@svelte/window";
 
     const wFocused = writable(false);
     const { currentEscaped, resultHistory, setCommand, execute } = useCommands(wFocused);

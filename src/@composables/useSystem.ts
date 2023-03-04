@@ -1,3 +1,4 @@
+import type { GetChildren, TreeItem } from "@svelte/window";
 import { derived, writable } from "svelte/store";
 
 const system = writable<TreeItem[]>([

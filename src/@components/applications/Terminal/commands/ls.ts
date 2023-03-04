@@ -3,6 +3,7 @@ import { useSystem } from "../../../../@composables";
 import { createCommand, createCommandMatcher } from "../createCommand";
 import { executeFlags, setFlag, setWithoutFlag } from "../createCommandFlags";
 import { mounths } from "../../../../lib/@tools/date";
+import type { ParsedItem } from "@svelte/window";
 
 export const match = createCommandMatcher(({ command }) => 
     get<string>(command).startsWith('ls'));

@@ -97,6 +97,7 @@
     import WindowMainHeader from "./WindowMainHeader.svelte";
     import { useOpenedWindows } from "../../../@composables";
     import { scale } from "svelte/transition";
+    import type { BoxSize, MovableZoneElement, Point } from "@svelte/window";
 
     const movableContext = useContext<boolean>('movable', false);
     const movableZoneElementContext = 

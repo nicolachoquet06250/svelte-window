@@ -6,6 +6,7 @@
 />
 
 <script lang='ts'>
+    import type { CSSCursor, MovableZoneElement, Point } from "@svelte/window";
     import { onMount } from "svelte";
     import { useFocus, useContext } from "../../@composables";
 

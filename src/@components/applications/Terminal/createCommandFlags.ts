@@ -1,3 +1,4 @@
+import type { CommandStore, GetFlag, SetFlagCb } from "@svelte/window";
 import { get, writable } from "svelte/store";
 
 const matchRegex = (str: string, regex: RegExp): string[][] => {

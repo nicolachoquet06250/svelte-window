@@ -1,3 +1,4 @@
+import type { WindowItem, Windows } from "@svelte/window";
 import { writable } from "svelte/store";
 
 const windows = writable<Windows>([]);

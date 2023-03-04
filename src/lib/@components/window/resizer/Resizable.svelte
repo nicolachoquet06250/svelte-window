@@ -28,6 +28,7 @@
     import { scale } from "svelte/transition";
     import ResizerGroup from "./WindowResizerGroup.svelte";
     import { useFocus, useTidyWindows, useContext } from "../../../@composables";
+    import type { AvailableSide, BoxSize, ClickedEvent, Point, ResizeEvent } from "@svelte/window";
 
     const { list: tidyWindowList } = useTidyWindows();
     const { list: windowList } = useFocus();

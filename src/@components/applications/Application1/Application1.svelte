@@ -25,6 +25,7 @@
 <svelte:options accessors />
 
 <script lang="ts">
+    import type { WindowCss } from "@svelte/window";
     import { DefaultTidyWindow, WindowWrapper } from "../../../lib/@components";
     import { useContextMenu, useWindowProps, useWindowStyle } from "../../../lib/@composables";
     import { MacOsHeader } from "../../headers";
