@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "postinstall": "cp node_modules/@svelte/window/@types node_modules/@types/svelte-window"
+    "postinstall": "cp @types ../../@types/svelte-window"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
