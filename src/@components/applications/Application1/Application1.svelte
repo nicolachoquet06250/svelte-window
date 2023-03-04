@@ -46,17 +46,13 @@
                 key: 't'
             },
             action(_, { component }) {
-                if (component.style.bg_color === 'red') {
-                    component.style = {
-                        ..._style,
-                        bg_color: 'white'
-                    };
-                } else {
-                    component.style = {
-                        ..._style,
-                        bg_color: 'red'
-                    };
-                }
+                component.style = component.style.bg_color === 'red' ? {
+                    ..._style,
+                    bg_color: 'white'
+                } : {
+                    ..._style,
+                    bg_color: 'red'
+                };
 
                 console.log('premier menu contextuel');
 

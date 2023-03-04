@@ -8,52 +8,44 @@
 </svelte:head>
 
 <main>
-  {#each $windows as window (window.id)}
-    {@const {id = 0, specificWindow = null, style = {}, data = {}, ..._window} = window}
-
-    {#if specificWindow}
-      <svelte:component 
-        this={specificWindow} {id} 
-        {...data} {style}
-      />
-    {/if}
-  {/each}
+  <WindowPull />
 </main>
 
 <TaskBar />
 
 <script lang="ts">
-    import { TaskBar } from "./@components";
-    import { Application1, Terminal } from "./@components/applications";
-    import { useOpenedWindows } from "./@composables";
+  import { TaskBar } from "./@components";
+  import { Application1, Terminal } from "./@components/applications";
+  import { useOpenedWindows } from "./@composables";
+  import WindowPull from "./lib/@components/WindowPull.svelte";
 
-    const { init, windows } = useOpenedWindows();
+  const { init } = useOpenedWindows();
 
-    init([
-      {
-        specificWindow: Application1,
-        data: {
-          positionX: 100,
-          positionY: 101
-        }
-      },
-      {
-        specificWindow: Terminal
-      },
-      {
-        specificWindow: Terminal,
-        data: {
-          positionX: 150,
-          positionY: 150,
-          resizable: true
-        }
-      },
-      {
-        specificWindow: Terminal,
-        data: {
-          positionX: 300,
-          positionY: 300
-        }
-      },
-    ]);
+  init([
+    {
+      specificWindow: Application1,
+      data: {
+        positionX: 100,
+        positionY: 101
+      }
+    },
+    {
+      specificWindow: Terminal
+    },
+    {
+      specificWindow: Terminal,
+      data: {
+        positionX: 150,
+        positionY: 150,
+        resizable: true
+      }
+    },
+    {
+      specificWindow: Terminal,
+      data: {
+        positionX: 300,
+        positionY: 300
+      }
+    },
+  ]);
 </script>

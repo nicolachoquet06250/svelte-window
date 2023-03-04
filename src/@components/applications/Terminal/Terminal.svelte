@@ -31,9 +31,9 @@
     import logo from "./Logo.svelte";
     import Cursor from "./Cursor.svelte";
     import DefaultPrompt from "./DefaultPrompt.svelte";
+    import TerminalHeader from "./TerminalHeader.svelte";
     import { useCommands } from "./composables";
     import { writable } from "svelte/store";
-    import TerminalHeader from "./TerminalHeader.svelte";
     import { useContext, useWindowProps, useWindowStyle } from "../../../lib/@composables";
     import { onMount } from "svelte";
 

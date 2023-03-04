@@ -1,6 +1,7 @@
 import _DefaultTidyWindow from './DefaultTidyWindow.svelte';
 import _DefaultWindowContent from './DefaultWindowContent.svelte';
 import _TidyWindowsContainer from './TidyWindowsContainer.svelte';
+import _WindowPull from './WindowPull.svelte';
 
 export * from './window';
 
@@ -12,3 +13,6 @@ export * from './DefaultWindowContent.svelte';
 
 export const TidyWindowsContainer = _TidyWindowsContainer;
 export * from './TidyWindowsContainer.svelte';
+
+export const WindowPull = _WindowPull;
+export * from './WindowPull.svelte';
