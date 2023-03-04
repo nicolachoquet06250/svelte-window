@@ -197,6 +197,10 @@
   dependencies:
     "@types/node" "*"
 
+"@types/svelte-window@https://github.com/nicolachoquet06250/svelte-window-types.git":
+  version "0.0.0"
+  resolved "https://github.com/nicolachoquet06250/svelte-window-types.git#519ac530f7e2fb4d8b973b596688d2d9e9c41281"
+
 anymatch@~3.1.2:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.3.tgz#790c58b19ba1720a84205b57c618d5ad8524973e"

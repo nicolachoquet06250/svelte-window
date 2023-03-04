@@ -1,5 +1,5 @@
 {
-  "name": "svelte-window",
+  "name": "@svelte/window",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -17,7 +17,8 @@
     "svelte-check": "^2.10.3",
     "tslib": "^2.5.0",
     "typescript": "^4.9.3",
-    "vite": "^4.1.0"
+    "vite": "^4.1.0",
+    "@types/svelte-window": "https://github.com/nicolachoquet06250/svelte-window-types.git"
   },
   "dependencies": {
     "@svelte-use/core": "^0.11.0",
